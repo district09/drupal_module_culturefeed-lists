@@ -1,0 +1,373 @@
+<?php
+
+/**
+ * @file
+ * Functionality to manage Culturefeed list.
+ */
+
+// Lists variable name.
+define('CULTUREFEED_LISTS_VARIABLE', 'culturefeed_lists');
+
+// Permissions.
+define('CULTUREFEED_LISTS_PERMISSION_ADMINISTER', 'administer culturefeed lists');
+define('CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM', 'manage culturefeed item lists');
+
+// Administration base path.
+define('CULTUREFEED_LISTS_PATH_ADMIN', 'admin/config/culturefeed/lists');
+define('CULTUREFEED_LISTS_PATH_EVENT_MANAGE', 'agenda/e/%/%culturefeed_agenda_event/lists');
+
+// Include libraries.
+require_once __DIR__ . '/includes/list.inc';
+require_once __DIR__ . '/includes/list_item.inc';
+require_once __DIR__ . '/includes/list_sort.inc';
+
+/**
+ * Implements hook_hook_info().
+ */
+function culturefeed_lists_hook_info() {
+  $group = array('group' => 'culturefeed');
+
+  return array(
+    'culturefeed_lists_admin_path' => $group,
+    'culturefeed_lists_admin_path_alter' => $group,
+  );
+}
+
+/**
+ * Helper to get list admin path.
+ *
+ * @param array $parts
+ *   The parts to add after the admin path.
+ *
+ * @return string
+ *   The admin path.
+ */
+function culturefeed_lists_admin_path(array $parts = array()) {
+  $path = CULTUREFEED_LISTS_PATH_ADMIN;
+  if ($parts) {
+    $path .= '/' . implode('/', $parts);
+  }
+
+  // Allow site specific implementations to alter the admin paths.
+  drupal_alter('culturefeed_lists_admin_path', $path, $parts);
+
+  return $path;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function culturefeed_lists_permission() {
+  return array(
+    CULTUREFEED_LISTS_PERMISSION_ADMINISTER => array(
+      'title' => t('Administer CultureFeed lists'),
+      'description' => t('Manage lists and their content.'),
+    ),
+    CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM => array(
+      'title' => t('Manage CultureFeed item lists'),
+      'description' => t('Manage the lists for an item.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function culturefeed_lists_menu() {
+  $items = array();
+  $file_admin = 'culturefeed_lists.admin.inc';
+  $file_pages = 'culturefeed_lists.pages.inc';
+
+  $admin = culturefeed_lists_admin_path();
+  $admin_add = culturefeed_lists_admin_path(
+    array('add')
+  );
+  $admin_edit = culturefeed_lists_admin_path(
+    array('%culturefeed_lists_list', 'edit')
+  );
+  $admin_delete = culturefeed_lists_admin_path(
+    array('%culturefeed_lists_list', 'delete')
+  );
+  $admin_manage = culturefeed_lists_admin_path(
+    array('%culturefeed_lists_list', 'manage')
+  );
+  $admin_manage_reset = culturefeed_lists_admin_path(
+    array('%culturefeed_lists_list', 'manage', 'reset')
+  );
+  $admin_manage_event_remove = culturefeed_lists_admin_path(
+    array(
+      '%culturefeed_lists_list',
+      'manage',
+      '%culturefeed_agenda_event',
+      'remove',
+    )
+  );
+
+  // List administration pages.
+  $items[$admin] = array(
+    'title' => 'CultureFeed Lists',
+    'description' => 'Manage lists and their items.',
+    'page callback' => 'culturefeed_lists_admin_overview',
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
+  $items[$admin_add] = array(
+    'title' => 'Add list',
+    'description' => 'Add a new item list.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('culturefeed_lists_admin_list_form'),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+    'type' => MENU_LOCAL_ACTION,
+  );
+  $items[$admin_edit] = array(
+    'title' => 'Edit list',
+    'description' => 'Edit an existing list.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('culturefeed_lists_admin_list_form', 4),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
+  $items[$admin_delete] = array(
+    'title' => 'Delete list',
+    'description' => 'Delete a list.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('culturefeed_lists_admin_list_delete_form', 4),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
+  $items[$admin_manage] = array(
+    'title' => 'Manage list items',
+    'title callback' => 'culturefeed_lists_admin_manage_title',
+    'title arguments' => array(4),
+    'description' => 'Manage the list items.',
+    'page callback' => 'culturefeed_lists_admin_manage',
+    'page arguments' => array(4),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
+  $items[$admin_manage_reset] = array(
+    'title' => 'Reset sort order.',
+    'description' => 'Reset the manually set sort order of the list items.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('culturefeed_lists_admin_manage_reset_order_form', 4),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
+  $items[$admin_manage_event_remove] = array(
+    'title' => 'Remove item from list',
+    'description' => 'Remove an item from a list.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'culturefeed_lists_admin_manage_item_remove_form',
+      4,
+      6,
+    ),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
+
+  // CultureFeed event list management.
+  $items[CULTUREFEED_LISTS_PATH_EVENT_MANAGE] = array(
+    'title' => 'Lists',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('culturefeed_lists_manage_event_lists_form', 3),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM),
+    'file' => $file_pages,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function culturefeed_lists_menu_alter(&$items) {
+  $path_tags = 'agenda/e/%/%culturefeed_agenda_event/tags';
+  $items[$path_tags]['page arguments'] = array(
+    'culturefeed_lists_entry_ui_edit_tag_objects_form',
+    3,
+  );
+  $items[$path_tags]['file'] = 'culturefeed_lists.pages.inc';
+  $items[$path_tags]['file path'] = drupal_get_path('module', 'culturefeed_lists');
+}
+
+/**
+ * Title callback for the list management admin page.
+ *
+ * @param CulturefeedListsList $list
+ *   The list to create the title for.
+ *
+ * @return string
+ *   The dynamic title.
+ */
+function culturefeed_lists_admin_manage_title(CulturefeedListsList $list) {
+  return t(
+    'CultureFeed List : @name',
+    array('@name' => $list->getName())
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function culturefeed_lists_help($path, $arg) {
+  $text = array();
+
+  if ($path === culturefeed_lists_admin_path()) {
+    $text[] = t('Items can be shown in lists. This is the overview of the defined lists.');
+    return theme('culturefeed_lists_help', $text);
+  }
+
+  if ($path === culturefeed_lists_admin_path(array('add'))) {
+    $text[] = t('Add a new item list.');
+    return theme('culturefeed_lists_help', $text);
+  }
+
+  if ($path === culturefeed_lists_admin_path(array('%', 'manage'))) {
+    $list = culturefeed_lists_menu_get_list();
+    $text[] = t(
+      'This overview contains all items that have been added to the <strong>@name</strong> list. You can remove items or change the order as they will be displayed.',
+      array('@name' => $list->getName())
+    );
+    $text[] = t('<strong>Note:</strong> items that took place in the past are automatically removed from the list.');
+    return theme('culturefeed_lists_help', $text);
+  }
+
+  if ($path === CULTUREFEED_LISTS_PATH_EVENT_MANAGE) {
+    $text[] = t('Add or remove the item from one or more lists.');
+    return theme('culturefeed_lists_help', $text);
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function culturefeed_lists_module_implements_alter(&$implementations, $hook) {
+  // Make sure that the lists tab is added as last.
+  if ($hook === 'menu_local_tasks_alter') {
+    $group = $implementations['culturefeed_lists'];
+    unset($implementations['culturefeed_lists']);
+    $implementations['culturefeed_lists'] = $group;
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * This is a dirty hack forced by the way culturefeed_entry_ui is adding the
+ * tabs to the event detail pages.
+ */
+function culturefeed_lists_menu_local_tasks_alter(array &$data, $router_item, $root_path) {
+  // Check if we need to alter.
+  if (arg(0) !== 'agenda' || arg(1) !== 'e' || empty(arg(3))) {
+    return;
+  }
+
+  // Load the event data.
+  $id = arg(3);
+  $event = culturefeed_search_item_load($id, 'event');
+  /* @var $event \CultuurNet\Search\ActivityStatsExtendedEntity */
+
+  // Add extra tabs.
+  $tabs = array();
+
+  // Add a tab for managing the lists.
+  if (user_access(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM)) {
+    $link = array(
+      'href' => culturefeed_entry_ui_entity_path($event, 'lists'),
+      'localized_options' => array(),
+      'title' => t('Lists'),
+    );
+
+    $tabs[] = array(
+      '#theme' => 'menu_local_task',
+      '#link' => $link,
+      '#active' => arg(4) === 'lists',
+    );
+  }
+
+  // Add the extra tabs (if any).
+  if (empty($tabs)) {
+    return;
+  }
+
+  // Clean state to start with.
+  if (empty($data['tabs'])) {
+    $data['tabs'] = array(
+      0 => array(
+        'output' => array(),
+        'count' => 0,
+      ),
+    );
+  }
+
+  $data['tabs'][0]['output'] = array_merge($data['tabs'][0]['output'], $tabs);
+  $data['tabs'][0]['count'] += count($tabs);
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function culturefeed_lists_views_api() {
+  return array(
+    'api' => 3.0,
+    'path' => drupal_get_path('module', 'culturefeed_lists') . '/views',
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function culturefeed_lists_ctools_plugin_directory($module, $plugin) {
+  // Register the plugin directory for the draggable views handlers.
+  if (($module === 'draggableviews')
+    && ($plugin === 'handler' || $plugin === 'hierarchy_handler')
+  ) {
+    return 'draggableviews';
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function culturefeed_lists_theme() {
+  $file = 'culturefeed_lists.theme.inc';
+
+  return array(
+    'culturefeed_lists_help' => array(
+      'file' => $file,
+      'variables' => array(
+        'text' => array(),
+      ),
+    ),
+  );
+}
+
+/**
+ * Adds the reset sort button to the manage lists page.
+ *
+ * @param array $form
+ *   The form structure.
+ * @param array $form_state
+ *   The form state.
+ *
+ * @see culturefeed_lists_admin_manage_reset_order_submit()
+ */
+function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter(array &$form, array &$form_state) {
+  $list = $form_state['list'];
+
+  // Only add the reset button if there is a custom sorts set.
+  $sort = culturefeed_lists_sort_load($list);
+  if (!empty($sort)) {
+    form_load_include($form_state, 'inc', 'culturefeed_lists', 'culturefeed_lists.admin');
+    $form['actions']['reset_order'] = array(
+      '#type' => 'submit',
+      '#value' => t('Reset order'),
+      '#limit_validation_errors' => array(),
+      '#submit' => array('culturefeed_lists_admin_manage_reset_order_submit'),
+    );
+  }
+}
