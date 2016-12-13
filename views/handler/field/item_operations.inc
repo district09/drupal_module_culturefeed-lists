@@ -2,7 +2,7 @@
 
 /**
  * @file
- * View handler to remove an UiTDB item from a list.
+ * Views field handler to add item operation links.
  */
 
 use \CultuurNet\Search\ActivityStatsExtendedEntity;
