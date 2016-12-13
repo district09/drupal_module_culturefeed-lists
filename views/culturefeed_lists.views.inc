@@ -168,10 +168,10 @@ function culturefeed_lists_views_extract_list_from_filter_list_id(view $view) {
     return FALSE;
   }
 
-  if (empty($filter['value']) || !count($filter['value'])) {
+  if (empty($filter['value'])) {
     return FALSE;
   }
 
-  $list_id = array_shift($filter->value);
+  $list_id = array_shift($filter['value']);
   return culturefeed_lists_list_load($list_id);
 }
