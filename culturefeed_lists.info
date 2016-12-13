@@ -1,5 +1,5 @@
 name = CultureFeed Lists
-description = Create and curate lists of manual selectec Cdb items (events).
+description = Create and curate lists of manual selected Cdb items (events).
 package = "CultureFeed"
 core = 7.x
 
