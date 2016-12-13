@@ -260,7 +260,7 @@ function culturefeed_lists_admin_list_form_submit_delete(array $form, array &$fo
  * @see culturefeed_lists_admin_list_form()
  */
 function culturefeed_lists_admin_list_form_submit_cancel() {
-  drupal_goto(culturefeed_lists_admin_path());
+  $form_state['redirect'] = culturefeed_lists_admin_path();
 }
 
 /**
@@ -389,7 +389,7 @@ function culturefeed_lists_admin_manage_item_remove_form(array $form, array &$fo
  *
  * @see culturefeed_lists_admin_manage_item_remove_form()
  */
-function culturefeed_lists_admin_manage_item_remove_form_submit(array $form, array $form_state) {
+function culturefeed_lists_admin_manage_item_remove_form_submit(array $form, array &$form_state) {
   global $language;
 
   $event = $form['#event'];
@@ -410,13 +410,8 @@ function culturefeed_lists_admin_manage_item_remove_form_submit(array $form, arr
     );
     drupal_set_message($message);
 
-    drupal_goto(
-      culturefeed_lists_admin_path(
-        array(
-          $list->getId(),
-          'manage',
-        )
-      )
+    $form_state['redirect'] = culturefeed_lists_admin_path(
+      array($list->getId(), 'manage')
     );
   }
   catch (Exception $e) {
