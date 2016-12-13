@@ -24,7 +24,7 @@ class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
    */
   public function query() {
     // No query required.
-    // The actual ordering will be performend by a hook_views_pre_render().
+    // The actual ordering will be performed by a hook_views_pre_render().
     // @see culturefeed_lists_views_pre_render().
   }
 
