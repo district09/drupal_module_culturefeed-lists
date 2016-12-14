@@ -205,7 +205,7 @@ function culturefeed_lists_admin_list_form_submit(array $form, array &$form_stat
 
   // Add a new list item.
   if (empty($list)) {
-    $list = new CulturefeedListsList($list_name);
+    $list = CulturefeedListsList::fromName($list_name);
     culturefeed_lists_list_save($list);
     drupal_set_message(t('List %name added.', $message_args));
     return;

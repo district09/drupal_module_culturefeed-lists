@@ -14,7 +14,17 @@ class CulturefeedListsListStore extends CulturefeedListsListCollection {
    * Load the lists when creating the object.
    */
   public function __construct() {
-    $lists = variable_get(CULTUREFEED_LISTS_VARIABLE, array());
+    $data = variable_get(CULTUREFEED_LISTS_VARIABLE, array());
+    /* @var array $data */
+
+    $lists = array();
+    foreach ($data as $list) {
+      $lists[$list['id']] = CulturefeedListsList::fromIdAndName(
+        $list['id'],
+        $list['name']
+      );
+    }
+
     parent::__construct($lists);
   }
 
@@ -57,7 +67,12 @@ class CulturefeedListsListStore extends CulturefeedListsListCollection {
    * Save the lists to the variables store.
    */
   protected function save() {
-    variable_set(CULTUREFEED_LISTS_VARIABLE, $this->lists);
+    $data = array();
+    foreach ($this as $id => $list) {
+      $data[$id] = $list->toArray();
+    }
+
+    variable_set(CULTUREFEED_LISTS_VARIABLE, $data);
   }
 
 }
