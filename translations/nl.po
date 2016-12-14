@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-12-09 10:33+0100\n"
-"PO-Revision-Date: 2016-12-12 14:51+0100\n"
+"PO-Revision-Date: 2016-12-14 11:04+0100\n"
 "Last-Translator: Peter Decuyper <peter.decuyper@digipolis.gent>\n"
 "Language-Team: Digipolis <tbweb@gent.be>\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Name"
 msgstr "Naam"
 
-#: culturefeed_lists.admin.inc:36 culturefeed_lists.pages.inc:81 views/culturefeed_lists.views.inc:42 views/culturefeed_lists.views_default.inc:98
+#: culturefeed_lists.admin.inc:36 culturefeed_lists.pages.inc:81 views/culturefeed_lists.views.inc:38 views/culturefeed_lists.views_default.inc:94
 msgid "Operations"
 msgstr "Bewerkingen"
 
@@ -34,7 +34,7 @@ msgstr "verwijderen"
 msgid "No lists defined."
 msgstr "Geen lijsten gedefiniëerd."
 
-#: culturefeed_lists.admin.inc:101 culturefeed_lists.module:113
+#: culturefeed_lists.admin.inc:101 culturefeed_lists.module:115
 msgid "Add list"
 msgstr "Lijst toevoegen"
 
@@ -84,32 +84,36 @@ msgstr ""
 msgid "List %name is deleted."
 msgstr "Lijst %name is verwijderd."
 
-#: culturefeed_lists.admin.inc:373 culturefeed_lists.module:156
+#: culturefeed_lists.admin.inc:373 culturefeed_lists.module:158
 msgid "Remove item from list"
 msgstr "Verwijder item uit lijst"
 
 #: culturefeed_lists.admin.inc:375
 msgid "Are you sure that you want to remove item <strong>@item_name</strong> from list <strong>@list_name</strong>?"
 msgstr ""
-"Bent u zeker dat u het item <strong>@item_name</strong> uit de lijst "
+"Bent u zeker dat u item <strong>@item_name</strong> uit de lijst "
 "<strong>@list_name</strong> wil verwijderen?"
 
-#: culturefeed_lists.admin.inc:402
+#: culturefeed_lists.admin.inc:404
 msgid "Item %item_name is removed from list %list_name."
 msgstr "Item %item_name is verwijderd uit lijst %list_name."
 
-#: culturefeed_lists.admin.inc:469
+#: culturefeed_lists.admin.inc:419 culturefeed_lists.pages.inc:143
+msgid "Error occurred while saving the item lists."
+msgstr "Er heeft zich een fout voorgedaan bij het opslaan van de item lijsten."
+
+#: culturefeed_lists.admin.inc:473
 msgid "Reset the order of %name list"
 msgstr "Herstel de standaard volgorde van %name lijst"
 
-#: culturefeed_lists.admin.inc:471
+#: culturefeed_lists.admin.inc:475
 msgid "Are you sure that you want to reset the order of the list items? This will remove all manually set sorting and can not be undone."
 msgstr ""
 "Bent u zeker dat u de volgorde van lijst items wil herstellen? Dit zal "
 "alle manuele sortering verwijderen en kan niet ongedaan worden "
 "gemaakt."
 
-#: culturefeed_lists.admin.inc:490
+#: culturefeed_lists.admin.inc:494
 msgid "Sorting of list is reset."
 msgstr "Standaard volgorde van de lijst is hersteld."
 
@@ -121,7 +125,7 @@ msgstr "Beheer lijsten"
 msgid "Create new list"
 msgstr "Maak nieuwe lijst aan"
 
-#: culturefeed_lists.pages.inc:79 draggableviews/CdbItems.inc:54 views/culturefeed_lists.views.inc:20;25;30 views/handler/filter/list_id.inc:63
+#: culturefeed_lists.pages.inc:79 draggableviews/CdbItems.inc:54 views/culturefeed_lists.views.inc:20;25 views/handler/filter/list_id.inc:63 views/handler/sort/draggable.inc:55
 msgid "List"
 msgstr "Lijst"
 
@@ -137,126 +141,126 @@ msgstr "De lijst is aangepast."
 msgid "You tried to add the item to a list with a name that is not allowed."
 msgstr "U probeerde een item toe te voegen aan een lijst met ongeldige naam."
 
-#: culturefeed_lists.pages.inc:143
-msgid "Error occurred while saving the item lists."
-msgstr "Er heeft zich een fout voorgedaan bij het opslaan van de item lijsten."
-
-#: culturefeed_lists.module:62
+#: culturefeed_lists.module:63
 msgid "Administer CultureFeed lists"
 msgstr "Beheer CultureFeed lijsten"
 
-#: culturefeed_lists.module:63
+#: culturefeed_lists.module:64
 msgid "Manage lists and their content."
 msgstr "Beheer lijsten en hun inhoud."
 
-#: culturefeed_lists.module:66
+#: culturefeed_lists.module:67
 msgid "Manage CultureFeed item lists"
 msgstr "Beheer CultureFeed item lijsten"
 
-#: culturefeed_lists.module:67
+#: culturefeed_lists.module:68
 msgid "Manage the lists for an item."
 msgstr "Beheer de lijsten van een item."
 
-#: culturefeed_lists.module:190
+#: culturefeed_lists.module:192
 msgid "CultureFeed List : @name"
 msgstr "CultureFeed Lijst : @name"
 
-#: culturefeed_lists.module:203
+#: culturefeed_lists.module:205
 msgid "Items can be shown in lists. This is the overview of the defined lists."
 msgstr ""
-"Evenementen kunnen worden weergegeven in lijsten. Ditis het overzicht "
+"Evenementen kunnen worden weergegeven in lijsten. Dit is het overzicht "
 "van beschikbare lijsten."
 
-#: culturefeed_lists.module:208;114
+#: culturefeed_lists.module:210;116
 msgid "Add a new item list."
 msgstr "Voeg een nieuwe item lijst toe."
 
-#: culturefeed_lists.module:214
+#: culturefeed_lists.module:216
 msgid "This overview contains all items that have been added to the <strong>@name</strong> list. You can remove items or change the order as they will be displayed."
 msgstr ""
 "Dit overzicht bevat alle evenementen die zijn toegevoegd aan de "
 "<strong>@name</strong> lijst. U kan items verwijderen of de volgorde "
 "waarin ze worden weergegeven aanpassen."
 
-#: culturefeed_lists.module:218
+#: culturefeed_lists.module:220
 msgid "<strong>Note:</strong> items that took place in the past are automatically removed from the list."
 msgstr ""
 "<strong>Opmerking:</strong> items die in het verleden liggen worden "
 "automatisch uit de lijst verwijderd."
 
-#: culturefeed_lists.module:223
+#: culturefeed_lists.module:225
 msgid "Add or remove the item from one or more lists."
 msgstr "Voeg item toe aan of verwijder item uit één of meerdere lijsten."
 
-#: culturefeed_lists.module:265;170
+#: culturefeed_lists.module:267;172
 msgid "Lists"
 msgstr "Lijsten"
 
-#: culturefeed_lists.module:353
+#: culturefeed_lists.module:398
 msgid "Reset order"
 msgstr "Herstel volgorde"
 
-#: culturefeed_lists.module:106 culturefeed_lists.info:0
+#: culturefeed_lists.module:108 culturefeed_lists.info:0
 msgid "CultureFeed Lists"
 msgstr "CultureFeed Lijsten"
 
-#: culturefeed_lists.module:107
+#: culturefeed_lists.module:109
 msgid "Manage lists and their items."
 msgstr "Beheer lijsten en hun inhoud."
 
-#: culturefeed_lists.module:122
+#: culturefeed_lists.module:124
 msgid "Edit list"
 msgstr "Lijst aanpassen"
 
-#: culturefeed_lists.module:123
+#: culturefeed_lists.module:125
 msgid "Edit an existing list."
 msgstr "Pas een bestaande lijst aan."
 
-#: culturefeed_lists.module:130
+#: culturefeed_lists.module:132
 msgid "Delete list"
 msgstr "Lijst verwijderen"
 
-#: culturefeed_lists.module:131
+#: culturefeed_lists.module:133
 msgid "Delete a list."
 msgstr "Verwijder een lijst."
 
-#: culturefeed_lists.module:138
+#: culturefeed_lists.module:140
 msgid "Manage list items"
 msgstr "Beheer lijst items"
 
-#: culturefeed_lists.module:141
+#: culturefeed_lists.module:143
 msgid "Manage the list items."
 msgstr "Beheer de lijst items."
 
-#: culturefeed_lists.module:148
+#: culturefeed_lists.module:150
 msgid "Reset sort order."
 msgstr "Herstel volgorde."
 
-#: culturefeed_lists.module:149
+#: culturefeed_lists.module:151
 msgid "Reset the manually set sort order of the list items."
 msgstr "Herstel de volgorde van de lijst."
 
-#: culturefeed_lists.module:157
+#: culturefeed_lists.module:159
 msgid "Remove an item from a list."
 msgstr "Verwijder een item uit een lijst."
 
 #: culturefeed_lists.info:0
-msgid "Create and curate lists of manual selectec Cdb items (events)."
-msgstr ""
-"Aanmaken en beheren van lijsten met manueel geselecteerde UDB items "
-"(evenementen)."
+msgid "Create and curate lists of manual selected Cdb items (events)."
+msgstr "Creëer en beheer lijsten van menueel geselecteerde Cdb items (events)."
 
 #: culturefeed_lists.info:0
 msgid "CultureFeed"
 msgstr "CultureFeed"
 
-#: draggableviews/CdbItems.inc:45
+#: draggableviews/CdbItems.inc:45 views/handler/sort/draggable.inc:47
 msgid "There are no lists defined. Add one or more lists so they can be selected."
-msgstr "Er zijn geen lijsten gedefiniëerd. Maak één of meerdere lijsten aan zodat deze hier kunnen worden geselecteerd."
+msgstr ""
+"Er zijn geen lijsten gedefiniëerd. Maak één of meerdere lijsten aan "
+"zodat deze hier kunnen worden geselecteerd."
 
 #: draggableviews/CdbItems.inc:57
 msgid "Please select the list to store the items sorting for."
 msgstr "Selecteer de lijst waarvoor de sortering dient opgeslagen te worden."
+
+#: includes/list.inc:26
+msgid "- Choose -"
+msgstr "- Kiezen -"
 
 #: views/culturefeed_lists.views.inc:16
 msgid "Cdb Items Lists"
@@ -266,105 +270,105 @@ msgstr "UDB Items Lijsten"
 msgid "The lists an item is part of."
 msgstr "De lijst waar een item deel van uit maakt."
 
-#: views/culturefeed_lists.views.inc:37
+#: views/culturefeed_lists.views.inc:33
 msgid "Item operations"
 msgstr "Item bewerkingen"
 
-#: views/culturefeed_lists.views.inc:38
+#: views/culturefeed_lists.views.inc:34
 msgid "Operational links to manage a list item."
 msgstr "Operationele links om lijst items te beheren."
 
-#: views/culturefeed_lists.views.inc:49
+#: views/culturefeed_lists.views.inc:45
 msgid "Draggableviews"
 msgstr "Draggableviews"
 
-#: views/culturefeed_lists.views.inc:50
+#: views/culturefeed_lists.views.inc:46
 msgid "Provides functionality to alter the order of Cdb items in lists."
 msgstr ""
 "Voorziet functionaliteit om de volgorde van de UDB items in lijsten "
 "aan te passen."
 
-#: views/culturefeed_lists.views.inc:54;59
+#: views/culturefeed_lists.views.inc:50;55
 msgid "Draggableviews order"
 msgstr "Draggableviews volgorde"
 
-#: views/culturefeed_lists.views.inc:60
+#: views/culturefeed_lists.views.inc:56
 msgid "Sort Cdb item lists by the sort weight."
-msgstr "Sorteer UDB item lijsten op basis van het volgorde gewicht."
+msgstr "Sorteer UDB item lijsten op basis van hun sorteer gewicht."
 
-#: views/culturefeed_lists.views_default.inc:80
+#: views/culturefeed_lists.views_default.inc:76
 msgid "Master"
 msgstr "Hoofd"
 
-#: views/culturefeed_lists.views_default.inc:81
+#: views/culturefeed_lists.views_default.inc:77
 msgid "CultureFeed : Manage list items"
 msgstr "CultureFeed: Beheer lijst items"
 
-#: views/culturefeed_lists.views_default.inc:82
+#: views/culturefeed_lists.views_default.inc:78
 msgid "more"
 msgstr "meer"
 
-#: views/culturefeed_lists.views_default.inc:83
+#: views/culturefeed_lists.views_default.inc:79
 msgid "Apply"
 msgstr "Toepassen"
 
-#: views/culturefeed_lists.views_default.inc:84
+#: views/culturefeed_lists.views_default.inc:80
 msgid "Reset"
 msgstr "Reset"
 
-#: views/culturefeed_lists.views_default.inc:85
+#: views/culturefeed_lists.views_default.inc:81
 msgid "Sort by"
 msgstr "Sorteren op"
 
-#: views/culturefeed_lists.views_default.inc:86
+#: views/culturefeed_lists.views_default.inc:82
 msgid "Ascending"
 msgstr "Oplopend"
 
-#: views/culturefeed_lists.views_default.inc:87
+#: views/culturefeed_lists.views_default.inc:83
 msgid "Descending"
 msgstr "Aflopend"
 
-#: views/culturefeed_lists.views_default.inc:88
+#: views/culturefeed_lists.views_default.inc:84
 msgid "Items per page"
 msgstr "Items per pagina"
 
-#: views/culturefeed_lists.views_default.inc:89
+#: views/culturefeed_lists.views_default.inc:85
 msgid "- All -"
 msgstr "- Alle -"
 
-#: views/culturefeed_lists.views_default.inc:90
+#: views/culturefeed_lists.views_default.inc:86
 msgid "Start"
 msgstr "Start"
 
-#: views/culturefeed_lists.views_default.inc:91
+#: views/culturefeed_lists.views_default.inc:87
 msgid "« first"
 msgstr "« eerste"
 
-#: views/culturefeed_lists.views_default.inc:92
+#: views/culturefeed_lists.views_default.inc:88
 msgid "‹ previous"
 msgstr "‹ vorige"
 
-#: views/culturefeed_lists.views_default.inc:93
+#: views/culturefeed_lists.views_default.inc:89
 msgid "next ›"
 msgstr "volgende ›"
 
-#: views/culturefeed_lists.views_default.inc:94
+#: views/culturefeed_lists.views_default.inc:90
 msgid "last »"
 msgstr "laatste »"
 
-#: views/culturefeed_lists.views_default.inc:95
+#: views/culturefeed_lists.views_default.inc:91
 msgid "<h3>There are no items in the list.</h3>"
 msgstr "<h3>Er zijn geen items in de lijst.</h3>"
 
-#: views/culturefeed_lists.views_default.inc:96
+#: views/culturefeed_lists.views_default.inc:92
 msgid "Title"
 msgstr "Titel"
 
-#: views/culturefeed_lists.views_default.inc:97
+#: views/culturefeed_lists.views_default.inc:93
 msgid "Dates"
 msgstr "Datums"
 
-#: views/culturefeed_lists.views_default.inc:99
+#: views/culturefeed_lists.views_default.inc:95
 msgid "Sort"
 msgstr "Sorteren"
 
@@ -384,7 +388,15 @@ msgstr "Verwijder uit lijst"
 msgid "Select one or more lists the item is part of."
 msgstr "Selecteer één of meerdere lijsten waar het item deel van uit maakt."
 
-#: views/handler/sort/draggable.inc:37
-msgid "List order."
-msgstr "Lijst volgorde."
+#: views/handler/sort/draggable.inc:56
+msgid "The list to sort the items by."
+msgstr "Items worden gesorteerd op basis van deze lijst."
+
+#: views/handler/sort/draggable.inc:99;105
+msgid "No list selected."
+msgstr "Geen lijst geselecteerd."
+
+#: views/handler/sort/draggable.inc:109
+msgid "Order items by list %list."
+msgstr "Sorteer items volgens lijst %list."
 

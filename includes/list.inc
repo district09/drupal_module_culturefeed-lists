@@ -22,7 +22,9 @@ function culturefeed_lists_list_load_all() {
  *   Array of list names keyed by their id.
  */
 function culturefeed_lists_list_options() {
-  $options = array();
+  $options = array(
+    NULL => t('- Choose -'),
+  );
 
   $lists = culturefeed_lists_list_load_all();
   foreach ($lists as $list) {

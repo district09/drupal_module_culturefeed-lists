@@ -86,4 +86,26 @@ class CulturefeedListsViewsHandlerFieldDraggable extends draggableviews_handler_
     }
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Sorts the view items by the draggable views list items weight.
+   */
+  // @codingStandardsIgnoreStart
+  public function post_execute(&$values) {
+  // @codingStandardsIgnoreEnd
+    if (empty($this->options['draggableviews']['CdbItems']['list'])) {
+      return;
+    }
+
+    $list = culturefeed_lists_list_load(
+      $this->options['draggableviews']['CdbItems']['list']
+    );
+    if (!$list) {
+      return;
+    }
+
+    _culturefeed_lists_view_values_sort($values, $list);
+  }
+
 }

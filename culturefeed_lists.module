@@ -401,3 +401,41 @@ function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_
     );
   }
 }
+
+/**
+ * Helper to sort CDBItems view results by their list item sort.
+ *
+ * @param array $items
+ *   The view items to sort (rows).
+ * @param CulturefeedListsList $list
+ *   The list to sort the items by.
+ */
+function _culturefeed_lists_view_values_sort(&$items, CulturefeedListsList $list) {
+  $not_ordered = array();
+  $ordered = culturefeed_lists_sort_load($list);
+  if (empty($ordered)) {
+    return;
+  }
+
+  // Sort the query result.
+  /* @var \CultuurNet\Search\ActivityStatsExtendedEntity[] $items */
+  foreach ($items as $key => $item) {
+    $item_id = $item->getId();
+
+    if (!isset($ordered[$item_id])) {
+      $not_ordered[] = $item;
+      continue;
+    }
+
+    $ordered[$item_id] = $item;
+  }
+
+  // Filter out items without items.
+  $ordered = array_filter($ordered);
+
+  // Combine sorted and unsorted items.
+  $items = array_merge(
+    array_values($ordered),
+    array_values($not_ordered)
+  );
+}
