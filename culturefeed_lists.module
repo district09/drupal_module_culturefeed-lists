@@ -180,19 +180,6 @@ function culturefeed_lists_menu() {
 }
 
 /**
- * Implements hook_menu_alter().
- */
-function culturefeed_lists_menu_alter(&$items) {
-  $path_tags = 'agenda/e/%/%culturefeed_agenda_event/tags';
-  $items[$path_tags]['page arguments'] = array(
-    'culturefeed_lists_entry_ui_edit_tag_objects_form',
-    3,
-  );
-  $items[$path_tags]['file'] = 'culturefeed_lists.pages.inc';
-  $items[$path_tags]['file path'] = drupal_get_path('module', 'culturefeed_lists');
-}
-
-/**
  * Title callback for the list management admin page.
  *
  * @param CulturefeedListsList $list
@@ -344,6 +331,46 @@ function culturefeed_lists_theme() {
       ),
     ),
   );
+}
+
+/**
+ * Limits the keyword list to all non-list keywords on the tags tab form.
+ *
+ * @param array $form
+ *   The form structure.
+ * @param array $form_state
+ *   The form state.
+ *
+ * @see culturefeed_entry_ui_edit_tag_objects_form()
+ */
+function culturefeed_lists_form_culturefeed_entry_ui_edit_tag_objects_form_alter(array &$form, array &$form_state) {
+  // Only need to filter if the item has keywords.
+  if (empty($form['#old_tags'])) {
+    return;
+  }
+
+  $lists = culturefeed_lists_list_load_all()->toArray();
+
+  // Remove lists from the old tags.
+  $form['#old_tags'] = array_diff_key($form['#old_tags'], $lists);
+
+  // Remove lists from the tags form element.
+  if (!empty($form['tags']['#default_value'])) {
+    foreach ($form['tags']['#default_value'] as $key => $tag) {
+      if (array_key_exists($tag['value'], $lists)) {
+        unset($form['tags']['#default_value'][$key]);
+      }
+    }
+  }
+
+  // Remove lists from the custom tags form element.
+  if (!empty($form['custom_tags']['#default_value'])) {
+    foreach ($form['custom_tags']['#default_value'] as $key => $tag) {
+      if (array_key_exists($tag['value'], $lists)) {
+        unset($form['custom_tags']['#default_value'][$key]);
+      }
+    }
+  }
 }
 
 /**
