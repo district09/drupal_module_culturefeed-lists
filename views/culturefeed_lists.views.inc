@@ -18,7 +18,7 @@ function culturefeed_lists_views_data_alter(&$data) {
   // Filter items by list keywords.
   $data['cdb_items']['list_id'] = array(
     'title' => t('List'),
-    'help' => t('The lists an item is part of.'),
+    'help' => t('Filter the items by the list(s) they are part of.'),
     'group' => $group,
     'real field' => 'cdbid',
     'filter' => array(

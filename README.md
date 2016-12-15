@@ -11,19 +11,19 @@ list, sorted by the manually set order.
 
 
 ## How it works
-The lists are created by adding keywords to the CultureFeed items. This 
-keywords are unique for each site (they get an unique id as keyword name). The
+The lists are created by adding keywords to the CultureFeed items. These 
+keywords are unique for each site (they get a unique id as keyword name). The
 actual name is stored in the site (can be renamed without the need to update
 all tagged items).
 
 The sorting of the list items is done by keeping a record per list of the 
 order of those items. The list is first queried in the CultureFeed search API
 and that result ordered in code based on the saved order. Items that are not 
-in the sort info (did not got a sort weight) are always put after the manually 
+in the sort info (did not get a sort weight) are always put after the manually 
 sorted items.
 
-> **NOTE** : Do not put to much items in a list: ordering to much items in 
-> code could slow down managing and showing the sorted lists. 
+> **NOTE** : Do not put too many items items in a list: ordering too many 
+> items in code could slow down managing and showing the sorted lists. 
 
 
 
@@ -41,7 +41,7 @@ sorted items.
   items and lists.
 * Assign the proper role(s) to the user who needs to manage lists.
 
-> **NOTE** : The lists functionality is build upon the CultureFeed Entry API.
+> **NOTE** : The lists functionality is built upon the CultureFeed Entry API.
 > This means that only users who login with an UiT iD account can add items 
 > to lists. 
 
@@ -78,7 +78,7 @@ items:
 There is a delay between the moment an item is added or removed to a list and
 that change being shown on the item lists tab or list management page. 
 
-This is due the fact that changing an item required that item to be 
+This is due the fact that changing an item requires that item to be 
 re-indexed in the CultureFeed Search API (source for showing items).
 
 

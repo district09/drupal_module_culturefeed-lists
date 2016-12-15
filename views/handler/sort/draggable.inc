@@ -6,7 +6,7 @@
  */
 
 /**
- * Views handler to sort a view b the UDB Item weight.
+ * Views handler to sort a view by the Cdb Item weight.
  */
 class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
 
