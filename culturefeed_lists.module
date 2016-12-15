@@ -180,19 +180,6 @@ function culturefeed_lists_menu() {
 }
 
 /**
- * Implements hook_menu_alter().
- */
-function culturefeed_lists_menu_alter(&$items) {
-  $path_tags = 'agenda/e/%/%culturefeed_agenda_event/tags';
-  $items[$path_tags]['page arguments'] = array(
-    'culturefeed_lists_entry_ui_edit_tag_objects_form',
-    3,
-  );
-  $items[$path_tags]['file'] = 'culturefeed_lists.pages.inc';
-  $items[$path_tags]['file path'] = drupal_get_path('module', 'culturefeed_lists');
-}
-
-/**
  * Title callback for the list management admin page.
  *
  * @param CulturefeedListsList $list
@@ -347,6 +334,46 @@ function culturefeed_lists_theme() {
 }
 
 /**
+ * Limits the keyword list to all non-list keywords on the tags tab form.
+ *
+ * @param array $form
+ *   The form structure.
+ * @param array $form_state
+ *   The form state.
+ *
+ * @see culturefeed_entry_ui_edit_tag_objects_form()
+ */
+function culturefeed_lists_form_culturefeed_entry_ui_edit_tag_objects_form_alter(array &$form, array &$form_state) {
+  // Only need to filter if the item has keywords.
+  if (empty($form['#old_tags'])) {
+    return;
+  }
+
+  $lists = culturefeed_lists_list_load_all()->toArray();
+
+  // Remove lists from the old tags.
+  $form['#old_tags'] = array_diff_key($form['#old_tags'], $lists);
+
+  // Remove lists from the tags form element.
+  if (!empty($form['tags']['#default_value'])) {
+    foreach ($form['tags']['#default_value'] as $key => $tag) {
+      if (array_key_exists($tag['value'], $lists)) {
+        unset($form['tags']['#default_value'][$key]);
+      }
+    }
+  }
+
+  // Remove lists from the custom tags form element.
+  if (!empty($form['custom_tags']['#default_value'])) {
+    foreach ($form['custom_tags']['#default_value'] as $key => $tag) {
+      if (array_key_exists($tag['value'], $lists)) {
+        unset($form['custom_tags']['#default_value'][$key]);
+      }
+    }
+  }
+}
+
+/**
  * Adds the reset sort button to the manage lists page.
  *
  * @param array $form
@@ -357,10 +384,13 @@ function culturefeed_lists_theme() {
  * @see culturefeed_lists_admin_manage_reset_order_submit()
  */
 function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter(array &$form, array &$form_state) {
-  $list = $form_state['list'];
+  // Add the button only if the page has items.
+  if (empty($form_state['list'])) {
+    return;
+  }
 
   // Only add the reset button if there is a custom sorts set.
-  $sort = culturefeed_lists_sort_load($list);
+  $sort = culturefeed_lists_sort_load($form_state['list']);
   if (!empty($sort)) {
     form_load_include($form_state, 'inc', 'culturefeed_lists', 'culturefeed_lists.admin');
     $form['actions']['reset_order'] = array(
@@ -370,4 +400,42 @@ function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_
       '#submit' => array('culturefeed_lists_admin_manage_reset_order_submit'),
     );
   }
+}
+
+/**
+ * Helper to sort CDBItems view results by their list item sort.
+ *
+ * @param array $items
+ *   The view items to sort (rows).
+ * @param CulturefeedListsList $list
+ *   The list to sort the items by.
+ */
+function _culturefeed_lists_view_values_sort(&$items, CulturefeedListsList $list) {
+  $not_ordered = array();
+  $ordered = culturefeed_lists_sort_load($list);
+  if (empty($ordered)) {
+    return;
+  }
+
+  // Sort the query result.
+  /* @var \CultuurNet\Search\ActivityStatsExtendedEntity[] $items */
+  foreach ($items as $key => $item) {
+    $item_id = $item->getId();
+
+    if (!isset($ordered[$item_id])) {
+      $not_ordered[] = $item;
+      continue;
+    }
+
+    $ordered[$item_id] = $item;
+  }
+
+  // Filter out items without items.
+  $ordered = array_filter($ordered);
+
+  // Combine sorted and unsorted items.
+  $items = array_merge(
+    array_values($ordered),
+    array_values($not_ordered)
+  );
 }

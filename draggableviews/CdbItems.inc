@@ -40,7 +40,7 @@ class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_nati
     $options = culturefeed_lists_list_options();
 
     // Add warnings when there are no lists defined.
-    if (count($options) === 1) {
+    if (count($options) < 2) {
       $form['list_warning'] = array(
         '#markup' => t('There are no lists defined. Add one or more lists so they can be selected.'),
         '#prefix' => '<div class="messages warning">',

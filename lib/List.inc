@@ -24,14 +24,12 @@ class CulturefeedListsList {
   private $name;
 
   /**
-   * Create a new list by giving it a name.
+   * List should be created with a named constructor.
    *
-   * @param string $name
-   *   The list name.
+   * @see CulturefeedListsList::fromName()
+   * @see CulturefeedListsList::fromArray()
    */
-  public function __construct($name) {
-    $this->createId();
-    $this->name = $name;
+  private function __construct() {
   }
 
   /**
@@ -71,6 +69,21 @@ class CulturefeedListsList {
   }
 
   /**
+   * Get the array notation for a list.
+   *
+   * @return array
+   *   Array containing:
+   *   - id: The list id.
+   *   - name: The list name.
+   */
+  public function toArray() {
+    return array(
+      'id' => $this->getId(),
+      'name' => $this->getName(),
+    );
+  }
+
+  /**
    * Create a new id for the list.
    */
   protected function createId() {
@@ -79,6 +92,57 @@ class CulturefeedListsList {
       . '-';
 
     $this->id = uniqid($prefix);
+  }
+
+  /**
+   * Create a list item from the given name.
+   *
+   * @param string $name
+   *   The list name.
+   *
+   * @return CulturefeedListsList
+   *   The created list object.
+   *
+   * @throws InvalidArgumentException
+   *   When the name is empty.
+   */
+  static public function fromName($name) {
+    $name = trim($name);
+    if (empty($name)) {
+      throw new InvalidArgumentException('The list name can not be empty.');
+    }
+
+    $list = new static();
+    $list->name = $name;
+    $list->createId();
+
+    return $list;
+  }
+
+  /**
+   * Create a list item from a given array.
+   *
+   * @param string $id
+   *   The list id.
+   * @param string $name
+   *   The list name.
+   *
+   * @return CulturefeedListsList
+   *   The created list object.
+   *
+   * @throws InvalidArgumentException
+   *   When the id is not valid.
+   */
+  static public function fromIdAndName($id, $name) {
+    $id = trim($id);
+    if (empty($id)) {
+      throw new InvalidArgumentException('The list id can not be empty.');
+    }
+
+    $list = static::fromName($name);
+    $list->id = $id;
+
+    return $list;
   }
 
 }

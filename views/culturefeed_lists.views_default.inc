@@ -31,8 +31,8 @@ function culturefeed_lists_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['sort_asc_label'] = 'Ascending';
   $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Descending';
-  $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '30';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Start';
   $handler->display->display_options['style_plugin'] = 'table';
   /* No results behavior: Global: Text area */
@@ -67,10 +67,6 @@ function culturefeed_lists_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['handler'] = 'CdbItems';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 0;
-  /* Sort criterion: Cdb items Lists: Draggable Sort */
-  $handler->display->display_options['sorts']['draggableviews']['id'] = 'draggableviews';
-  $handler->display->display_options['sorts']['draggableviews']['table'] = 'cdb_items';
-  $handler->display->display_options['sorts']['draggableviews']['field'] = 'draggableviews';
   /* Filter criterion: Cdb Items Lists: List */
   $handler->display->display_options['filters']['list_id']['id'] = 'list_id';
   $handler->display->display_options['filters']['list_id']['table'] = 'cdb_items';
