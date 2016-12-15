@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Install, Update and Uninstall hooks.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function culturefeed_lists_schema() {
+  $schema['culturefeed_lists_sort'] = array(
+    'description' => 'The table saves the order settings of a sorted CultureFeed list.',
+    'fields' => array(
+      'list_id' => array(
+        'description' => 'List unique id.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'item_id' => array(
+        'description' => 'Id of the CultureFeed item that we are sorting (agenda, ...).',
+        'type' => 'char',
+        'length' => 36,
+        'not null' => TRUE,
+      ),
+      'weight' => array(
+        'description' => 'The order weight.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'list_id' => array('list_id'),
+      'item_id' => array('item_id'),
+      'weight' => array('weight'),
+    ),
+    'primary key' => array('list_id', 'item_id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function culturefeed_lists_install() {
+  // Create a list prefix.
+  variable_set('culturefeed_lists_id_prefix', uniqid());
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function culturefeed_lists_uninstall() {
+  variable_del('culturefeed_lists_id_prefix');
+  variable_del('culturefeed_lists');
+}

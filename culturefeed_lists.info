@@ -1,0 +1,18 @@
+name = CultureFeed Lists
+description = Create and curate lists of manual selected Cdb items (events).
+package = "CultureFeed"
+core = 7.x
+
+dependencies[] = culturefeed_entry_ui
+dependencies[] = culturefeed_search_views
+dependencies[] = culturefeed_ui
+dependencies[] = draggableviews
+
+files[] = draggableviews/CdbItems.inc
+files[] = lib/List.inc
+files[] = lib/ListCollection.inc
+files[] = lib/ListStore.inc
+files[] = views/handler/field/draggable.inc
+files[] = views/handler/field/item_operations.inc
+files[] = views/handler/filter/list_id.inc
+files[] = views/handler/sort/draggable.inc
