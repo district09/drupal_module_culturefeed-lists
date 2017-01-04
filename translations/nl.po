@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-12-09 10:33+0100\n"
-"PO-Revision-Date: 2016-12-14 11:04+0100\n"
+"PO-Revision-Date: 2017-01-04 11:09+0100\n"
 "Last-Translator: Peter Decuyper <peter.decuyper@digipolis.gent>\n"
 "Language-Team: Digipolis <tbweb@gent.be>\n"
 "MIME-Version: 1.0\n"
@@ -242,7 +242,9 @@ msgstr "Verwijder een item uit een lijst."
 
 #: culturefeed_lists.info:0
 msgid "Create and curate lists of manual selected Cdb items (events)."
-msgstr "Creëer en beheer lijsten van menueel geselecteerde Cdb items (events)."
+msgstr ""
+"Creëer en beheer lijsten van menueel geselecteerde Cdb items "
+"(events)."
 
 #: culturefeed_lists.info:0
 msgid "CultureFeed"
@@ -258,6 +260,10 @@ msgstr ""
 msgid "Please select the list to store the items sorting for."
 msgstr "Selecteer de lijst waarvoor de sortering dient opgeslagen te worden."
 
+#: draggableviews/CdbItems.inc:87
+msgid "Order of the items is saved."
+msgstr "Volgorde van de items is opgeslagen."
+
 #: includes/list.inc:26
 msgid "- Choose -"
 msgstr "- Kiezen -"
@@ -267,8 +273,8 @@ msgid "Cdb Items Lists"
 msgstr "UDB Items Lijsten"
 
 #: views/culturefeed_lists.views.inc:21
-msgid "The lists an item is part of."
-msgstr "De lijst waar een item deel van uit maakt."
+msgid "Filter the items by the list(s) they are part of."
+msgstr "Filter de items volgens de lijst(en) waar ze deel van uitmaken."
 
 #: views/culturefeed_lists.views.inc:33
 msgid "Item operations"

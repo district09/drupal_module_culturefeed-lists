@@ -84,7 +84,7 @@ class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_nati
       $weight++;
     }
 
-    drupal_set_message('Order of the items is saved.');
+    drupal_set_message(t('Order of the items is saved.'));
   }
 
 }
