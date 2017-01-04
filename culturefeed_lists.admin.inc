@@ -29,8 +29,6 @@ function culturefeed_lists_admin_overview() {
  *   The table render array.
  */
 function culturefeed_lists_admin_overview_table(CulturefeedListsListStore $lists) {
-  $operations_options = array('query' => drupal_get_destination());
-
   $header = array(
     'name' => array('data' => t('Name')),
     'operations' => array('data' => t('Operations')),
@@ -43,27 +41,31 @@ function culturefeed_lists_admin_overview_table(CulturefeedListsListStore $lists
 
     $operations = array(
       'manage' => array(
-        '#type' => 'link',
-        '#title' => t('manage items'),
-        '#href' => culturefeed_lists_admin_path(array($id, 'manage')),
+        'title' => t('Manage items'),
+        'href' => culturefeed_lists_admin_path(array($id, 'manage')),
       ),
       'edit' => array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => culturefeed_lists_admin_path(array($id, 'edit')),
-        '#options' => $operations_options,
+        'title' => t('Edit'),
+        'href' => culturefeed_lists_admin_path(array($id, 'edit')),
+        'query' => drupal_get_destination(),
       ),
       'delete' => array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => culturefeed_lists_admin_path(array($id, 'delete')),
-        '#options' => $operations_options,
+        'title' => t('Delete'),
+        'href' => culturefeed_lists_admin_path(array($id, 'delete')),
+        'query' => drupal_get_destination(),
       ),
+    );
+    $links = theme(
+      'links',
+      array(
+        'links' => $operations,
+        'attributes' => array('class' => array('links', 'inline')),
+      )
     );
 
     $rows[] = array(
       'name' => array('data' => $name),
-      'operations' => array('data' => $operations),
+      'operations' => array('data' => $links),
     );
   }
 

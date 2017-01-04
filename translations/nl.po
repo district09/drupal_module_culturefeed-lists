@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-12-09 10:33+0100\n"
-"PO-Revision-Date: 2017-01-04 11:09+0100\n"
+"PO-Revision-Date: 2017-01-03 12:49+0100\n"
 "Last-Translator: Peter Decuyper <peter.decuyper@digipolis.gent>\n"
 "Language-Team: Digipolis <tbweb@gent.be>\n"
 "MIME-Version: 1.0\n"
@@ -19,16 +19,16 @@ msgid "Operations"
 msgstr "Bewerkingen"
 
 #: culturefeed_lists.admin.inc:47
-msgid "manage items"
-msgstr "beheer items"
+msgid "Manage items"
+msgstr "Beheer items"
 
 #: culturefeed_lists.admin.inc:52
-msgid "edit"
-msgstr "bewerken"
+msgid "Edit"
+msgstr "Bewerken"
 
 #: culturefeed_lists.admin.inc:58
-msgid "delete"
-msgstr "verwijderen"
+msgid "Delete"
+msgstr "Verwijderen"
 
 #: culturefeed_lists.admin.inc:74 culturefeed_lists.pages.inc:107
 msgid "No lists defined."
