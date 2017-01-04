@@ -40,32 +40,32 @@ class CulturefeedListsViewsHandlerFieldItemOperations extends views_handler_fiel
     $links = array();
 
     // View the item.
-    $links['view'] = l(
-      t('View'),
-      culturefeed_entry_ui_entity_path($extended_entity, 'view')
+    $links['view'] = array(
+      'title' => t('View'),
+      'href' => culturefeed_entry_ui_entity_path($extended_entity, 'view'),
     );
 
     // Manage the item.
-    $links['manage'] = l(
-      t('Manage'),
-      culturefeed_entry_ui_entity_path($extended_entity, 'lists')
+    $links['manage'] = array(
+      'title' => t('Manage'),
+      'href' => culturefeed_entry_ui_entity_path($extended_entity, 'lists'),
     );
 
     // Remove from the list.
-    $links['remove'] = l(
-      t('Remove from list'),
-      culturefeed_lists_admin_path(
+    $links['remove'] = array(
+      'title' => t('Remove from list'),
+      'href' => culturefeed_lists_admin_path(
         array($list->getId(), 'manage', $extended_entity->getId(), 'remove')
-      )
+      ),
     );
 
-    // Render output.
-    if (empty($links)) {
-      return '';
-
-    }
-
-    return implode('', $links);
+    return theme(
+      'links',
+      array(
+        'links' => $links,
+        'attributes' => array('class' => array('links', 'inline')),
+      )
+    );
   }
 
 }
