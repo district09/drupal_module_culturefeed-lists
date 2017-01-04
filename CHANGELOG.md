@@ -2,6 +2,11 @@
 All Notable changes to **CultureFeed Lists**.
 
 
+## [Unreleased]
+### Fixed
+* #1 : Confirmation message is not translatable.
+
+
 
 
 ## [7.x-1.0-beta1] - 2016-12-15
