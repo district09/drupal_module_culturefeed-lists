@@ -15,7 +15,7 @@ $plugin = array(
 /**
  * Custom draggableviews handler to save and get the sort order.
  */
-class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_native {
+class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler {
 
   /**
    * {@inheritdoc}
@@ -85,6 +85,16 @@ class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_nati
     }
 
     drupal_set_message(t('Order of the items is saved.'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function get($field, $index) {
+    $row = $field->view->result[$index];
+    return (isset($row->draggableviews_structure_weight_coalesce))
+      ? $row->draggableviews_structure_weight_coalesce
+      : 0;
   }
 
 }
