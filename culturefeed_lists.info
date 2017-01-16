@@ -16,3 +16,6 @@ files[] = views/handler/field/draggable.inc
 files[] = views/handler/field/item_operations.inc
 files[] = views/handler/filter/list_id.inc
 files[] = views/handler/sort/draggable.inc
+
+; Tests.
+files[] = tests/lib/ListTestCase.test
