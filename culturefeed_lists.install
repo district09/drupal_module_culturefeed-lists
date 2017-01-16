@@ -58,3 +58,18 @@ function culturefeed_lists_uninstall() {
   variable_del('culturefeed_lists_id_prefix');
   variable_del('culturefeed_lists');
 }
+
+/**
+ * Adds the paths to the existing lists.
+ */
+function culturefeed_lists_update_7101() {
+  $lists = variable_get('culturefeed_lists', array());
+  foreach ($lists as $id => $list) {
+    $lists[$id]['path'] = preg_replace(
+      '/[^a-z0-9-]+/', '-',
+      strtolower($list['name'])
+    );
+  }
+
+  variable_set('culturefeed_lists', $lists);
+}
