@@ -37,8 +37,6 @@ function culturefeed_lists_list_options() {
 /**
  * Load a single list item by its id.
  *
- * The id is the list name with - between words.
- *
  * @param string $id
  *   The list id.
  *
@@ -49,6 +47,25 @@ function culturefeed_lists_list_load($id) {
   $lists = culturefeed_lists_list_load_all();
 
   $lists->seek($id);
+  if (!$lists->valid()) {
+    return FALSE;
+  }
+
+  return $lists->current();
+}
+
+/**
+ * Load a single list item by its path.
+ *
+ * @param string $path
+ *   The list path.
+ *
+ * @return CulturefeedListsList|false
+ *   The found list.
+ */
+function culturefeed_lists_list_path_load($path) {
+  $lists = culturefeed_lists_list_load_all();
+  $lists->seekByPath($path);
   if (!$lists->valid()) {
     return FALSE;
   }
