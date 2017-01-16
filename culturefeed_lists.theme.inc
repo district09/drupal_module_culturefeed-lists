@@ -15,7 +15,7 @@
  * @return string
  *   The rendered help text.
  */
-function theme_culturefeed_lists_help($variables) {
+function theme_culturefeed_lists_help(array $variables) {
   return '<p>'
     . implode('</p><p>', $variables['text'])
     . '</p>';

@@ -410,7 +410,7 @@ function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_
  * @param CulturefeedListsList $list
  *   The list to sort the items by.
  */
-function _culturefeed_lists_view_values_sort(&$items, CulturefeedListsList $list) {
+function _culturefeed_lists_view_values_sort(array &$items, CulturefeedListsList $list) {
   $not_ordered = array();
   $ordered = culturefeed_lists_sort_load($list);
   if (empty($ordered)) {
