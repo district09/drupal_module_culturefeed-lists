@@ -16,6 +16,8 @@ function culturefeed_lists_admin_overview() {
   $lists = culturefeed_lists_list_load_all();
   $output['lists'] = culturefeed_lists_admin_overview_table($lists);
 
+  drupal_alter('culturefeed_lists_admin_overview', $output);
+
   return $output;
 }
 
@@ -64,8 +66,15 @@ function culturefeed_lists_admin_overview_table(CulturefeedListsListStore $lists
     );
 
     $rows[] = array(
-      'name' => array('data' => $name),
-      'operations' => array('data' => $links),
+      'data' => array(
+        'name' => array(
+          'data' => $name,
+        ),
+        'operations' => array(
+          'data' => $links,
+        ),
+      ),
+      'list' => $list,
     );
   }
 

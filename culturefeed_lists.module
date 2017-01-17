@@ -28,8 +28,8 @@ function culturefeed_lists_hook_info() {
   $group = array('group' => 'culturefeed');
 
   return array(
-    'culturefeed_lists_admin_path' => $group,
     'culturefeed_lists_admin_path_alter' => $group,
+    'culturefeed_lists_admin_overview_alter' => $group,
   );
 }
 

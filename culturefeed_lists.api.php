@@ -33,5 +33,23 @@ function hook_culturefeed_lists_admin_path_alter(&$path, array $parts = array())
 }
 
 /**
+ * Alter the Lists administration overview page.
+ *
+ * This hook allowes other modules to alter the ourput (render array) of the
+ * Lists administration overview page.
+ *
+ * @param array $output
+ *   The render array.
+ */
+function hook_culturefeed_lists_admin_overview_alter(array &$output) {
+  foreach ($output['lists']['#rows'] as $id => $row) {
+    $output['lists']['#rows'][$id]['data']['name']['data'] = l(
+      $row['data']['name']['data'],
+      'agenda/l/' . $row['list']->getPath()
+    );
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
