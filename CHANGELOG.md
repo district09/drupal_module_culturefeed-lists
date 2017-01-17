@@ -9,6 +9,8 @@ All Notable changes to **CultureFeed Lists**.
 * #1 : Confirmation message is not translatable.
 * #3 : Added spacing to the operation links.
 * #5 : Fixed overriding the native draggable handler.
+* #7 : Added path to the list details + added hook to alter the administration
+  overview page.
 
 
 
