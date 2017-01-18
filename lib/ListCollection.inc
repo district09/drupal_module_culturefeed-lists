@@ -160,6 +160,20 @@ class CulturefeedListsListCollection implements Countable, SeekableIterator {
   }
 
   /**
+   * Seek a list item by its path.
+   *
+   * @param string $path
+   *   The list path.
+   */
+  public function seekByPath($path) {
+    foreach ($this as $list) {
+      if ($path === $list->getPath()) {
+        return;
+      }
+    }
+  }
+
+  /**
    * Helper to update the key positions when the list changes.
    */
   protected function updateKeys() {

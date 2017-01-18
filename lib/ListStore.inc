@@ -21,7 +21,8 @@ class CulturefeedListsListStore extends CulturefeedListsListCollection {
     foreach ($data as $list) {
       $lists[$list['id']] = CulturefeedListsList::fromIdAndName(
         $list['id'],
-        $list['name']
+        $list['name'],
+        $list['path']
       );
     }
 

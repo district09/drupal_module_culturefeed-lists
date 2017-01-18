@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Test the List object.
+ */
+
+/**
+ * Tests the CulturefeedListsList functionality.
+ */
+class CulturefeedListsListTestCase extends DrupalWebTestCase {
+
+  /**
+   * SiteId used in the tests.
+   *
+   * @var string
+   *   Dummy site ID.
+   */
+  private $siteId = 'SITEID';
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Lib/List'),
+      'description' => t('Tests the List object.'),
+      'group' => t('CultureFeed Lists'),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp(array('culturefeed_lists'));
+    variable_set('culturefeed_lists_id_prefix', $this->siteId);
+  }
+
+  /**
+   * Test creating a new List object from a list name.
+   */
+  public function testFromName() {
+    $name = 'Test List name';
+    $prefix = 'list-' . $this->siteId . '-';
+    $pattern = '/^' . preg_quote($prefix, '/') . '/';
+
+    // Create with auto generated path.
+    $list = CulturefeedListsList::fromName($name);
+    $this->assertTrue(
+      preg_match($pattern, $list->getId()),
+      sprintf('List id has "%s" prefix.', $prefix)
+    );
+    $this->assertEqual(
+      $name,
+      $list->getName(),
+      'Name is set in the list.'
+    );
+    $this->assertEqual(
+      'test-list-name',
+      $list->getPath(),
+      'Path is auto generated based from the name.'
+    );
+
+    // Create with given path.
+    $path = 'foo-bar';
+    $list = CulturefeedListsList::fromName($name, $path);
+    $this->assertEqual($path, $list->getPath(), 'Path is set.');
+  }
+
+  /**
+   * Test Creating a new List object from its id and name.
+   */
+  public function testFromIdAndName() {
+    $id = 'foo-bar-456789';
+    $name = 'Test List name';
+    $path = 'foo-bar-fizz';
+
+    // With auto generated path.
+    $list = CulturefeedListsList::fromIdAndName($id, $name);
+    $this->assertEqual($id, $list->getId(), 'Id is set in the List.');
+    $this->assertEqual($name, $list->getName(), 'Name is set in the List.');
+    $this->assertEqual('test-list-name', $list->getPath(), 'Path is auto generated.');
+
+    // With manual path set.
+    $list = CulturefeedListsList::fromIdAndName($id, $name, $path);
+    $this->assertEqual($path, $list->getPath(), 'Path is set in the List.');
+  }
+
+  /**
+   * Test manipulating a list.
+   */
+  public function testManipulatingList() {
+    $list = CulturefeedListsList::fromIdAndName('id', 'Name', 'path');
+
+    $listName = $list->rename('Renamed');
+    $this->assertEqual('Renamed', $listName->getName(), 'Name is altered.');
+    $this->assertNotIdentical($list, $listName, 'A clone was created of the original List object.');
+
+    $listPath = $list->withPath('foo-bar');
+    $this->assertEqual('foo-bar', $listPath->getPath(), 'Path is altered.');
+    $this->assertNotIdentical($list, $listPath, 'A clone was created of the original List object.');
+  }
+
+  /**
+   * Test extracteing the list object to an array.
+   */
+  public function testToArray() {
+    $list = CulturefeedListsList::fromIdAndName('id', 'Name', 'path');
+    $expected = array(
+      'id' => 'id',
+      'name' => 'Name',
+      'path' => 'path',
+    );
+    $this->assertEqual($expected, $list->toArray(), 'Array contains all list properties.');
+  }
+
+}

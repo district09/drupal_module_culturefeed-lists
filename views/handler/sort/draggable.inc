@@ -42,7 +42,7 @@ class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
     $options = culturefeed_lists_list_options();
 
     // Add warnings when there are no lists defined.
-    if (count($options) < 2) {
+    if (!count($options)) {
       $form['list_warning'] = array(
         '#markup' => t('There are no lists defined. Add one or more lists so they can be selected.'),
         '#prefix' => '<div class="messages warning">',
@@ -56,6 +56,7 @@ class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
       '#description' => t('The list to sort the items by.'),
       '#options' => $options,
       '#default_value' => $this->options['list'],
+      '#empty_option' => t('- Choose -'),
     );
   }
 

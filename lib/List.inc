@@ -24,6 +24,13 @@ class CulturefeedListsList {
   private $name;
 
   /**
+   * The list path.
+   *
+   * @var string
+   */
+  private $path;
+
+  /**
    * List should be created with a named constructor.
    *
    * @see CulturefeedListsList::fromName()
@@ -69,6 +76,32 @@ class CulturefeedListsList {
   }
 
   /**
+   * Get the path.
+   *
+   * @return string
+   *   The path.
+   */
+  public function getPath() {
+    return $this->path;
+  }
+
+  /**
+   * Change the path.
+   *
+   * @param string $path
+   *   The new path.
+   *
+   * @return CulturefeedListsList
+   *   A new object containing the new path.
+   */
+  public function withPath($path) {
+    $list = clone $this;
+    $list->path = $path;
+
+    return $list;
+  }
+
+  /**
    * Get the array notation for a list.
    *
    * @return array
@@ -80,6 +113,7 @@ class CulturefeedListsList {
     return array(
       'id' => $this->getId(),
       'name' => $this->getName(),
+      'path' => $this->getPath(),
     );
   }
 
@@ -99,6 +133,8 @@ class CulturefeedListsList {
    *
    * @param string $name
    *   The list name.
+   * @param string $path
+   *   Optional list path, will auto generate a path if none is given.
    *
    * @return CulturefeedListsList
    *   The created list object.
@@ -106,15 +142,20 @@ class CulturefeedListsList {
    * @throws InvalidArgumentException
    *   When the name is empty.
    */
-  static public function fromName($name) {
+  static public function fromName($name, $path = NULL) {
     $name = trim($name);
     if (empty($name)) {
       throw new InvalidArgumentException('The list name can not be empty.');
     }
 
     $list = new static();
-    $list->name = $name;
     $list->createId();
+    $list->name = $name;
+
+    if (empty($path)) {
+      $path = $name;
+    }
+    $list->path = preg_replace('/[^a-z0-9-]+/', '-', strtolower($path));
 
     return $list;
   }
@@ -126,6 +167,8 @@ class CulturefeedListsList {
    *   The list id.
    * @param string $name
    *   The list name.
+   * @param string $path
+   *   Optional list path, will auto generate a path if none is given.
    *
    * @return CulturefeedListsList
    *   The created list object.
@@ -133,13 +176,13 @@ class CulturefeedListsList {
    * @throws InvalidArgumentException
    *   When the id is not valid.
    */
-  static public function fromIdAndName($id, $name) {
+  static public function fromIdAndName($id, $name, $path = NULL) {
     $id = trim($id);
     if (empty($id)) {
       throw new InvalidArgumentException('The list id can not be empty.');
     }
 
-    $list = static::fromName($name);
+    $list = static::fromName($name, $path);
     $list->id = $id;
 
     return $list;
