@@ -306,7 +306,7 @@ function culturefeed_lists_admin_list_form_submit(array $form, array &$form_stat
   }
 
   if (!$changes) {
-    drupal_set_message(t('No changes for list %name.', $message_args), 'status');
+    drupal_set_message(t('No changes for list %name_old.', $message_args), 'status');
     return;
   }
 
