@@ -427,6 +427,11 @@ function culturefeed_lists_admin_manage(CulturefeedListsList $list) {
   $filter['value'] = array($list_id => $list_id);
   $view->set_item($display_id, 'filter', 'list_id', $filter);
 
+  // Set the sort list value.
+  $sort = $view->get_item($display_id, 'sort', 'draggableviews');
+  $sort['list'] = $list_id;
+  $view->set_item($display_id, 'sort', 'draggableviews', $sort);
+
   return $view->preview($display_id);
 }
 
