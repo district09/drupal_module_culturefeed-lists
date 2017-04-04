@@ -5,10 +5,12 @@
  * View sort handler.
  */
 
+use CultuurNet\Search\Parameter\Sort;
+
 /**
  * Views handler to sort a view by the Cdb Item weight.
  */
-class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
+class CulturefeedListsViewsHandlerSortDraggable extends views_handler_sort_culturefeed_search_base {
 
   /**
    * {@inheritdoc}
@@ -64,30 +66,16 @@ class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
    * {@inheritdoc}
    */
   public function query() {
-    // No query required.
-    // The actual ordering will be performed by self::post_execute().
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Sorts the view items by the draggable views list items weight.
-   */
-  // @codingStandardsIgnoreStart
-  public function post_execute(&$values) {
-    // @codingStandardsIgnoreEnd
-    if (empty($this->options['list'])) {
+    $sort = $this->getSort();
+    if (!$sort) {
       return;
     }
 
-    $list = culturefeed_lists_list_load(
-      $this->options['list']
+    $parameter = new Sort(
+      'query({!v="cdbid:(' . implode(' OR ', $sort) . ')"})',
+      $this->options['order']
     );
-    if (!$list) {
-      return;
-    }
-
-    _culturefeed_lists_view_values_sort($values, $list);
+    $this->query->add_parameter($parameter);
   }
 
   /**
@@ -111,6 +99,42 @@ class CulturefeedListsViewsHandlerSortDraggable extends views_handler {
       'Order items by list %list.',
       array('%list' => $list->getName())
     );
+  }
+
+  /**
+   * Create the sort query array.
+   *
+   * @return array
+   *   Array of items to bost the sort for.
+   */
+  protected function getSort() {
+    // Get the list.
+    $list = culturefeed_lists_list_load(
+      $this->options['list']
+    );
+
+    if (!$list) {
+      return array();
+    }
+
+    // We start the boost low enough.
+    $boost = -1000;
+
+    // Loop over the ordered items and add them to the query sort.
+    $sort = array();
+    $order = array_keys(culturefeed_lists_sort_load($list));
+    foreach ($order as $cdbid) {
+      $sort[] = sprintf(
+        '[%s TO %s]^%d',
+        $cdbid,
+        $cdbid,
+        $boost
+      );
+
+      $boost++;
+    }
+
+    return $sort;
   }
 
 }

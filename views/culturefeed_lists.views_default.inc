@@ -67,6 +67,12 @@ function culturefeed_lists_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['handler'] = 'CdbItems';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 0;
+  /* Sort criterion: UDB Items Lijsten: Draggableviews */
+  $handler->display->display_options['sorts']['draggableviews']['id'] = 'draggableviews';
+  $handler->display->display_options['sorts']['draggableviews']['table'] = 'cdb_items';
+  $handler->display->display_options['sorts']['draggableviews']['field'] = 'draggableviews';
+  $handler->display->display_options['sorts']['draggableviews']['order'] = 'ASC';
+  $handler->display->display_options['sorts']['draggableviews']['list'] = '';
   /* Filter criterion: Cdb Items Lists: List */
   $handler->display->display_options['filters']['list_id']['id'] = 'list_id';
   $handler->display->display_options['filters']['list_id']['table'] = 'cdb_items';
