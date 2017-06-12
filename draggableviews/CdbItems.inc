@@ -15,7 +15,7 @@ $plugin = array(
 /**
  * Custom draggableviews handler to save and get the sort order.
  */
-class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_native {
+class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler {
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_nati
     $options = culturefeed_lists_list_options();
 
     // Add warnings when there are no lists defined.
-    if (count($options) < 2) {
+    if (!count($options)) {
       $form['list_warning'] = array(
         '#markup' => t('There are no lists defined. Add one or more lists so they can be selected.'),
         '#prefix' => '<div class="messages warning">',
@@ -55,6 +55,7 @@ class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_nati
       '#options' => $options,
       '#default_value' => $default,
       '#description' => t('Please select the list to store the items sorting for.'),
+      '#empty_option' => t('- Choose -'),
     );
     return $form;
   }
@@ -84,7 +85,17 @@ class CulturefeedListsDraggableviewsCdbItems extends draggableviews_handler_nati
       $weight++;
     }
 
-    drupal_set_message('Order of the items is saved.');
+    drupal_set_message(t('Order of the items is saved.'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function get($field, $index) {
+    $row = $field->view->result[$index];
+    return (isset($row->draggableviews_structure_weight_coalesce))
+      ? $row->draggableviews_structure_weight_coalesce
+      : 0;
   }
 
 }

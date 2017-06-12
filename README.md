@@ -25,6 +25,9 @@ sorted items.
 > **NOTE** : Do not put too many items items in a list: ordering too many 
 > items in code could slow down managing and showing the sorted lists. 
 
+> **NOTE** : Only the first 20 items in a list will be retrieved sorted from the
+> Culturefeed backend. This to GET query length limitations.
+
 
 
 ## Requirements

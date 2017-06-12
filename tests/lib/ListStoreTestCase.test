@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * Test the ListStore object.
+ */
+
+/**
+ * Tests the CulturefeedListsListStore functionality.
+ */
+class CulturefeedListsListStoreTestCase extends DrupalWebTestCase {
+
+  /**
+   * Lists to add to the Drupal variable.
+   *
+   * @var array
+   */
+  private $lists = array(
+    'list-id-1' => array(
+      'id' => 'list-id-1',
+      'name' => 'List Name 1',
+      'path' => 'list-path-1',
+    ),
+    'list-id-2' => array(
+      'id' => 'list-id-2',
+      'name' => 'List Name 2',
+      'path' => 'list-path-2',
+    ),
+    'list-id-3' => array(
+      'id' => 'list-id-3',
+      'name' => 'List Name 3',
+      'path' => 'list-path-3',
+    ),
+    'list-id-4' => array(
+      'id' => 'list-id-4',
+      'name' => 'List Name 4',
+      'path' => 'list-path-4',
+    ),
+  );
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Lib/ListStore'),
+      'description' => t('Tests the ListStore object.'),
+      'group' => t('CultureFeed Lists'),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp(array('culturefeed_lists'));
+    variable_set('culturefeed_lists', $this->lists);
+  }
+
+  /**
+   * Test loading and manipulating the list store.
+   */
+  public function testStore() {
+    $store = new CulturefeedListsListStore();
+    $this->assertIdentical(4, $store->count(), '4 lists in the store.');
+
+    // Check if all data is stored.
+    $storeData = $store->toArray();
+    foreach ($storeData as $listId => $list) {
+      $this->assertIdentical(
+        $this->lists[$listId],
+        $list->toArray(),
+        sprintf('List %s contains all data', $listId)
+      );
+    }
+
+    // Remove list 2 from the list.
+    $store->seek('list-id-2');
+    $list2 = $store->current();
+    $store->removeList($list2);
+    $this->assertIdentical(3, $store->count(), '3 lists in the store.');
+    $store->seek('list-id-2');
+    $this->assertFalse($store->valid(), 'List 2 no longer in the store.');
+
+    // Add an extra item to the list.
+    $listNew = CulturefeedListsList::fromIdAndName('list-id-new', 'List Name New', 'list-path-new');
+    $store->saveList($listNew);
+    $this->assertIdentical(4, $store->count(), '4 lists in the store.');
+    $store->seek('list-id-new');
+    $this->assertTrue($store->valid(), 'New list is stored.');
+  }
+
+}

@@ -22,9 +22,7 @@ function culturefeed_lists_list_load_all() {
  *   Array of list names keyed by their id.
  */
 function culturefeed_lists_list_options() {
-  $options = array(
-    NULL => t('- Choose -'),
-  );
+  $options = array();
 
   $lists = culturefeed_lists_list_load_all();
   foreach ($lists as $list) {
@@ -36,8 +34,6 @@ function culturefeed_lists_list_options() {
 
 /**
  * Load a single list item by its id.
- *
- * The id is the list name with - between words.
  *
  * @param string $id
  *   The list id.
@@ -126,4 +122,36 @@ function culturefeed_lists_menu_get_list($path = NULL) {
   }
 
   return reset($item['page_arguments']);
+}
+
+/**
+ * Load a single list item by its path.
+ *
+ * @param string $path
+ *   The list path.
+ *
+ * @return CulturefeedListsList|false
+ *   The found list.
+ */
+function culturefeed_lists_list_path_load($path) {
+  $lists = culturefeed_lists_list_load_all();
+  $lists->seekByPath($path);
+  if (!$lists->valid()) {
+    return FALSE;
+  }
+
+  return $lists->current();
+}
+
+/**
+ * Check if a List path is already in use.
+ *
+ * @param string $path
+ *   The path to check.
+ *
+ * @return bool
+ *   Exists.
+ */
+function culturefeed_lists_list_path_exists($path) {
+  return (bool) culturefeed_lists_list_path_load($path);
 }

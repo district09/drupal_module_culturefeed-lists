@@ -1,0 +1,212 @@
+<?php
+
+/**
+ * @file
+ * Test the ListStore object.
+ */
+
+require_once __DIR__ . '/../../lib/List.inc';
+require_once __DIR__ . '/../../lib/ListCollection.inc';
+
+/**
+ * Tests the CulturefeedListsListStore functionality.
+ */
+class CulturefeedListsListCollectionTestCase extends DrupalUnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Lib/ListCollection'),
+      'description' => t('Tests the ListCollection object.'),
+      'group' => t('CultureFeed Lists'),
+    );
+  }
+
+  /**
+   * Test the iterator functionality.
+   */
+  public function testIterator() {
+    $lists = $this->getLists();
+    $collection = new CulturefeedListsListCollection($lists);
+    $this->assertIdentical(3, $collection->count(), '3 lists in the collection.');
+
+    // Current item.
+    $list = $collection->current();
+    $this->assertTrue($list instanceof CulturefeedListsList, 'List is a CulturefeedListsList object.');
+    $this->assertIdentical('list-id-1', $list->getId(), 'Get first item of collection.');
+    $this->assertIdentical('list-id-1', $collection->key(), 'List id 1 returned as current key.');
+    $this->assertTrue($collection->valid(), 'List item is valid.');
+
+    // Loop.
+    $collection->next();
+    $this->assertIdentical('list-id-2', $collection->key(), 'List id 2 returned as current key.');
+    $collection->next();
+    $this->assertIdentical('list-id-3', $collection->key(), 'List id 3 returned as current key.');
+    $collection->next();
+    $this->assertFalse($collection->valid(), 'No longer valid if we advanced beyond the last item.');
+
+    // Rewind.
+    $collection->rewind();
+    $this->assertIdentical('list-id-1', $collection->key(), 'Back to first list item after rewind.');
+  }
+
+  /**
+   * Test seeking a list item by its id.
+   */
+  public function testSeek() {
+    $lists = $this->getLists();
+    $collection = new CulturefeedListsListCollection($lists);
+
+    $collection->seek('list-id-2');
+    $this->assertIdentical('list-id-2', $collection->key(), 'List is pointing to found list item.');
+
+    $collection->seek('list-id-not-found');
+    $this->assertFalse($collection->key(), 'No key set when there is no list item with the given id.');
+  }
+
+  /**
+   * Test seeking a list item by its path.
+   */
+  public function testSeekByPath() {
+    $lists = $this->getLists();
+    $collection = new CulturefeedListsListCollection($lists);
+
+    // Seek existing item.
+    $collection->seekByPath('list-path-3');
+    $this->assertIdentical('list-id-3', $collection->key(), 'List item 3 found by its path.');
+
+    // Seek non existing item.
+    $collection->seekByPath('list-path-not-found');
+    $this->assertFalse($collection->key(), 'No key set when there is no list item with the given path.');
+  }
+
+  /**
+   * Get the array representation of the collection.
+   */
+  public function testToArray() {
+    $lists = $this->getLists();
+    $collection = new CulturefeedListsListCollection($lists);
+    $this->assertIdentical($lists, $collection->toArray(), 'To array returns array of Lists.');
+  }
+
+  /**
+   * Test the sorting mechanism in the collection.
+   */
+  public function testSort() {
+    $lists = $this->getDiffLists();
+    $collection = new CulturefeedListsListCollection($lists);
+    $this->assertIdentical('list-id-2', $collection->key(), 'List 2 is first in the collection (sorted).');
+    $collection->next();
+    $this->assertIdentical('list-id-4', $collection->key(), 'List 4 is first in the collection (sorted).');
+  }
+
+  /**
+   * Test check if collection has the given list.
+   */
+  public function testHasList() {
+    $lists = $this->getLists();
+    $collection = new CulturefeedListsListCollection($lists);
+
+    $list = $lists['list-id-2'];
+    $this->assertTrue($collection->hasList($list), 'List 2 is in the collection.');
+
+    $list = CulturefeedListsList::fromIdAndName('list-id-not-found', 'Not found');
+    $this->assertFalse($collection->hasList($list), 'List is not found in the collection.');
+  }
+
+  /**
+   * Test the diff functionality.
+   */
+  public function testDiff() {
+    $lists = $this->getLists();
+    $collection = new CulturefeedListsListCollection($lists);
+    $collectionDiff = new CulturefeedListsListCollection($this->getDiffLists());
+
+    $diff = $collection->diff($collectionDiff);
+    $this->assertTrue($diff instanceof CulturefeedListsListCollection, 'Diff is a ListCollection object.');
+    $this->assertIdentical(2, $diff->count(), '2 list items in the diff.');
+    $this->assertTrue($diff->hasList($lists['list-id-1']), 'List item 1 in the diff.');
+    $this->assertFalse($diff->hasList($lists['list-id-2']), 'List item 2 not in the diff.');
+    $this->assertTrue($diff->hasList($lists['list-id-3']), 'List item 3 in the diff.');
+
+    $diff = $collectionDiff->diff($collection);
+    $this->assertIdentical(1, $diff->count(), '1 list item in the diff.');
+  }
+
+  /**
+   * Test the intersect functionality.
+   */
+  public function testIntersect() {
+    $collection = new CulturefeedListsListCollection($this->getLists());
+    $collectionIntersect = new CulturefeedListsListCollection($this->getDiffLists());
+
+    $intersect = $collection->intersect($collectionIntersect);
+    $this->assertTrue($intersect instanceof CulturefeedListsListCollection, 'Intersect is a ListCollection object.');
+    $this->assertIdentical(1, $intersect->count(), '1 list item in the intersection.');
+    $this->assertIdentical('list-id-2', $intersect->current()->getId(), 'List item 2 is in both collections.');
+  }
+
+  /**
+   * Helper to get an array of CulturefeedListsList objects.
+   *
+   * @return CulturefeedListsList[]
+   *   Array of lists.
+   */
+  protected function getLists() {
+    $lists = array();
+
+    try {
+      $lists['list-id-1'] = CulturefeedListsList::fromIdAndName(
+        'list-id-1',
+        'List Name 1',
+        'list-path-1'
+      );
+      $lists['list-id-2'] = CulturefeedListsList::fromIdAndName(
+        'list-id-2',
+        'List Name 2',
+        'list-path-2'
+      );
+      $lists['list-id-3'] = CulturefeedListsList::fromIdAndName(
+        'list-id-3',
+        'List Name 3',
+        'list-path-3'
+      );
+    }
+    catch (Exception $e) {
+      $this->error($e->getMessage());
+    }
+
+    return $lists;
+  }
+
+  /**
+   * Helper to get an array to test diff and intersect with.
+   *
+   * @return CulturefeedListsList[]
+   *   Array of lists.
+   */
+  protected function getDiffLists() {
+    $lists = array();
+
+    try {
+      $lists['list-id-4'] = CulturefeedListsList::fromIdAndName(
+        'list-id-4',
+        'List Name 4',
+        'list-path-4'
+      );
+      $lists['list-id-2'] = CulturefeedListsList::fromIdAndName(
+        'list-id-2',
+        'List Name 2',
+        'list-path-2'
+      );
+    }
+    catch (Exception $e) {
+      $this->error($e->getMessage());
+    }
+
+    return $lists;
+  }
+
+}

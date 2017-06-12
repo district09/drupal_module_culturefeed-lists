@@ -16,6 +16,8 @@ function culturefeed_lists_admin_overview() {
   $lists = culturefeed_lists_list_load_all();
   $output['lists'] = culturefeed_lists_admin_overview_table($lists);
 
+  drupal_alter('culturefeed_lists_admin_overview', $output);
+
   return $output;
 }
 
@@ -29,8 +31,6 @@ function culturefeed_lists_admin_overview() {
  *   The table render array.
  */
 function culturefeed_lists_admin_overview_table(CulturefeedListsListStore $lists) {
-  $operations_options = array('query' => drupal_get_destination());
-
   $header = array(
     'name' => array('data' => t('Name')),
     'operations' => array('data' => t('Operations')),
@@ -43,27 +43,38 @@ function culturefeed_lists_admin_overview_table(CulturefeedListsListStore $lists
 
     $operations = array(
       'manage' => array(
-        '#type' => 'link',
-        '#title' => t('manage items'),
-        '#href' => culturefeed_lists_admin_path(array($id, 'manage')),
+        'title' => t('Manage items'),
+        'href' => culturefeed_lists_admin_path(array($id, 'manage')),
       ),
       'edit' => array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => culturefeed_lists_admin_path(array($id, 'edit')),
-        '#options' => $operations_options,
+        'title' => t('Edit'),
+        'href' => culturefeed_lists_admin_path(array($id, 'edit')),
+        'query' => drupal_get_destination(),
       ),
       'delete' => array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => culturefeed_lists_admin_path(array($id, 'delete')),
-        '#options' => $operations_options,
+        'title' => t('Delete'),
+        'href' => culturefeed_lists_admin_path(array($id, 'delete')),
+        'query' => drupal_get_destination(),
       ),
+    );
+    $links = theme(
+      'links',
+      array(
+        'links' => $operations,
+        'attributes' => array('class' => array('links', 'inline')),
+      )
     );
 
     $rows[] = array(
-      'name' => array('data' => $name),
-      'operations' => array('data' => $operations),
+      'data' => array(
+        'name' => array(
+          'data' => $name,
+        ),
+        'operations' => array(
+          'data' => $links,
+        ),
+      ),
+      'list' => $list,
     );
   }
 
@@ -115,6 +126,28 @@ function culturefeed_lists_admin_list_form(array $form, array &$form_state, Cult
     '#required' => TRUE,
     '#element_validate' => array(
       'culturefeed_lists_admin_list_form_validate_list_name',
+    ),
+  );
+
+  // The list path field.
+  $default_path = $list
+    ? $list->getPath()
+    : NULL;
+  $form['list_path'] = array(
+    '#type' => 'machine_name',
+    '#title' => t('List path'),
+    '#default_value' => $default_path,
+    '#maxlength' => MENU_MAX_MENU_NAME_LENGTH_UI,
+    '#description' => t('A unique path to construct the URL for the list. It must only contain lowercase letters, numbers and hyphens.'),
+    '#machine_name' => array(
+      'exists' => 'culturefeed_lists_list_path_exists',
+      'source' => array('list_name'),
+      'label' => t('List path'),
+      'replace_pattern' => '[^a-z0-9-]+',
+      'replace' => '-',
+    ),
+    '#element_validate' => array(
+      'culturefeed_lists_admin_list_form_validate_list_path',
     ),
   );
 
@@ -185,6 +218,43 @@ function culturefeed_lists_admin_list_form_validate_list_name(array $element, ar
 }
 
 /**
+ * Form element validator for the list_path field.
+ *
+ * @param array $element
+ *   The element to validate.
+ * @param array $form_state
+ *   The current form state.
+ * @param array $form
+ *   The form structure.
+ */
+function culturefeed_lists_admin_list_form_validate_list_path(array $element, array &$form_state, array $form) {
+  $list_path = $element['#value'];
+  $list_edit = $form['#list'];
+
+  // No error when the existing path did not change.
+  if ($list_edit && $list_edit->getPath() === $list_path) {
+    return;
+  }
+
+  // Check if there is already a list with the same path.
+  $existing = culturefeed_lists_list_path_load($list_path);
+  if (!$existing) {
+    return;
+  }
+
+  $error = FALSE;
+
+  // Check if there is already an other list with the same path.
+  if (!$list_edit || $list_edit->getId() !== $existing->getId()) {
+    $error = t('There is already a list with the same path.');
+  }
+
+  if ($error) {
+    form_error($element, $error);
+  }
+}
+
+/**
  * Submit handler for culturefeed_lists_admin_list_form().
  *
  * @param array $form
@@ -201,27 +271,47 @@ function culturefeed_lists_admin_list_form_submit(array $form, array &$form_stat
   /* @var CulturefeedListsList $list */
   $values = $form_state['values'];
   $list_name = $values['list_name'];
-  $message_args = array('%name' => $list_name);
+  $list_path = $values['list_path'];
+  $message_args = array(
+    '%name_new' => $list_name,
+    '%path_new' => $list_path,
+  );
 
   // Add a new list item.
   if (empty($list)) {
-    $list = CulturefeedListsList::fromName($list_name);
+    $list = CulturefeedListsList::fromName($list_name, $list_path);
     culturefeed_lists_list_save($list);
-    drupal_set_message(t('List %name added.', $message_args));
+    drupal_set_message(t('List %name_new added with path %path_new.', $message_args));
     return;
   }
+
+  // Add te existing values to the message args.
+  $message_args['%name_old'] = $list->getName();
+  $message_args['%path_old'] = $list->getPath();
+
+  $changes = FALSE;
 
   // Update the existing item only if the name is different.
-  if ($list->getName() === $list_name) {
-    drupal_set_message(t('No changes for list %name.', $message_args), 'status');
+  if ($list->getName() !== $list_name) {
+    $list = $list->rename($list_name);
+    drupal_set_message(t('List name %name_old changed to %name_new.', $message_args));
+    $changes = TRUE;
+  }
+
+  // Update the path only if it has changed.
+  if ($list->getPath() !== $list_path) {
+    $list = $list->withPath($list_path);
+    drupal_set_message(t('List name %name_old changed path from %path_old to %path_new.', $message_args));
+    $changes = TRUE;
+  }
+
+  if (!$changes) {
+    drupal_set_message(t('No changes for list %name_old.', $message_args), 'status');
     return;
   }
 
-  // Rename list.
-  $message_args['%name_old'] = $list->getName();
-  $list_update = $list->rename($list_name);
-  culturefeed_lists_list_save($list_update);
-  drupal_set_message(t('List %name_old changed to %name.', $message_args));
+  // Save the changes.
+  culturefeed_lists_list_save($list);
 }
 
 /**
@@ -336,6 +426,11 @@ function culturefeed_lists_admin_manage(CulturefeedListsList $list) {
   $filter = $view->get_item($display_id, 'filter', 'list_id');
   $filter['value'] = array($list_id => $list_id);
   $view->set_item($display_id, 'filter', 'list_id', $filter);
+
+  // Set the sort list value.
+  $sort = $view->get_item($display_id, 'sort', 'draggableviews');
+  $sort['list'] = $list_id;
+  $view->set_item($display_id, 'sort', 'draggableviews', $sort);
 
   return $view->preview($display_id);
 }
