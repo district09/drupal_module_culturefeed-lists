@@ -34,5 +34,5 @@ Initial start of the CultureFeed Lists module:
 
 
 [Unreleased]: https://github.com/digipolisgent/drupal_module_culturefeed-lists/compare/7.x-1.x...7.x-1.x-dev
-[7.x-1.0-beta2]: https://github.com/digipolisgent/drupal_module_culturefeed-lists/compare/7.x-1.0-beta2...7.x-1.0-beta1
+[7.x-1.0-beta2]: https://github.com/digipolisgent/drupal_module_culturefeed-lists/compare/7.x-1.0-beta1...7.x-1.0-beta2
 [7.x-1.0-beta1]: https://github.com/digipolisgent/drupal_module_culturefeed-lists/releases/tag/7.x-1.0-beta1
