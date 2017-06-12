@@ -68,6 +68,10 @@ class CulturefeedListsViewsHandlerFilterListId extends views_handler_filter_cult
     $lists = array();
     foreach ($value as $list_id) {
       $list = culturefeed_lists_list_load($list_id);
+      if (!$list) {
+        continue;
+      }
+
       $lists[] = $list->getName();
     }
 

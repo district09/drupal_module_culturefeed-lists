@@ -117,12 +117,13 @@ class CulturefeedListsViewsHandlerSortDraggable extends views_handler_sort_cultu
       return array();
     }
 
-    // We start the boost low enough.
-    $boost = -1000;
+    // Limit the list to the top 20 to avoid to long GET queries.
+    $order = array_keys(culturefeed_lists_sort_load($list));
+    $order = array_slice($order, 0, 20);
 
     // Loop over the ordered items and add them to the query sort.
+    $boost = -99;
     $sort = array();
-    $order = array_keys(culturefeed_lists_sort_load($list));
     foreach ($order as $cdbid) {
       $sort[] = sprintf(
         '[%s TO %s]^%d',

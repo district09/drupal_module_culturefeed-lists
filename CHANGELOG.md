@@ -17,6 +17,7 @@ All Notable changes to **CultureFeed Lists**.
   overview page.
 * #9 : Fixed list filter.
 * #13 : Fixed ordering the list items.
+* #15 : Fixed broken manual sort with large lists.
 
 
 
