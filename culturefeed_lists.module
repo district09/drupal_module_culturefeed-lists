@@ -289,6 +289,11 @@ function culturefeed_lists_menu_local_tasks_alter(array &$data, $router_item, $r
     );
   }
 
+  // Make sure that we can add tabs, even if the item itself has no other tabs.
+  if (!isset($data['tabs'][0]['count'])) {
+    $data['tabs'][0]['output'] = array();
+    $data['tabs'][0]['count'] = 0;
+  }
   $data['tabs'][0]['output'] = array_merge($data['tabs'][0]['output'], $tabs);
   $data['tabs'][0]['count'] += count($tabs);
 }
