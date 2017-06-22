@@ -6,7 +6,7 @@ All Notable changes to **CultureFeed Lists**.
 ## [Unreleased]
 ### Fixed
 * #17 : Fixed notices when there are no existing tabs on the event detail page.
-
+* #19 : Fixed sorting not working with large list of items.
 
 
 
