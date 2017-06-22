@@ -405,6 +405,20 @@ function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_
       '#submit' => array('culturefeed_lists_admin_manage_reset_order_submit'),
     );
   }
+
+  $form['actions']['submit']['#submit'][] = 'culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter_submit';
+}
+
+/**
+ * Make sure we reset the list before the new order is save.
+ *
+ * @param array $form
+ *   The form structure.
+ * @param array $form_state
+ *   The form state.
+ */
+function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter_submit($form, &$form_state) {
+  culturefeed_lists_sort_reset($form_state['list']);
 }
 
 /**
