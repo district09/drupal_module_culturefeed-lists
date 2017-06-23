@@ -15,6 +15,7 @@ define('CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM', 'manage culturefeed item list
 // Administration base path.
 define('CULTUREFEED_LISTS_PATH_ADMIN', 'admin/config/culturefeed/lists');
 define('CULTUREFEED_LISTS_PATH_EVENT_MANAGE', 'agenda/e/%/%culturefeed_agenda_event/lists');
+define('CULTUREFEED_LISTS_PATH_EVENT_MANAGE_REFRESH', 'agenda/e/%/%culturefeed_agenda_event/lists/refresh');
 
 // Include libraries.
 require_once __DIR__ . '/includes/list.inc';
@@ -183,6 +184,13 @@ function culturefeed_lists_menu() {
     'title' => 'Lists',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('culturefeed_lists_manage_event_lists_form', 3),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM),
+    'file' => $file_pages,
+  );
+  $items[CULTUREFEED_LISTS_PATH_EVENT_MANAGE_REFRESH] = array(
+    'title' => 'Refresh lists',
+    'page callback' => 'culturefeed_lists_manage_event_lists_refresh',
+    'page arguments' => array(3),
     'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM),
     'file' => $file_pages,
   );
