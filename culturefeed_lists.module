@@ -188,7 +188,7 @@ function culturefeed_lists_menu() {
     'file' => $file_pages,
   );
   $items[CULTUREFEED_LISTS_PATH_EVENT_MANAGE_REFRESH] = array(
-    'title' => 'Refresh lists',
+    'title' => 'Refresh',
     'page callback' => 'culturefeed_lists_manage_event_lists_refresh',
     'page arguments' => array(3),
     'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM),
