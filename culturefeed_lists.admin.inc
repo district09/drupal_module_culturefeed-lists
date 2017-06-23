@@ -589,3 +589,24 @@ function culturefeed_lists_admin_manage_reset_order_form_submit(array $form, arr
   drupal_set_message(t('Sorting of list is reset.'));
   drupal_goto(culturefeed_lists_admin_path(array($list->getId(), 'manage')));
 }
+
+/**
+ * Refresh the list of events by reloading them from the backend.
+ *
+ * @param CulturefeedListsList $list
+ *   The list to refresh.
+ */
+function culturefeed_lists_admin_manage_refresh(CulturefeedListsList $list) {
+  cache_clear_all(
+    'culturefeed:results:search:',
+    'cache_culturefeed_search',
+    TRUE
+  );
+
+  drupal_set_message(t('The list is reloaded.'));
+
+  $admin_manage = culturefeed_lists_admin_path(
+    array($list->getId(), 'manage')
+  );
+  drupal_goto($admin_manage);
+}
