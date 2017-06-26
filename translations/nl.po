@@ -145,7 +145,7 @@ msgstr "Maak nieuwe lijst aan"
 
 #: culturefeed_lists.pages.inc:62 culturefeed_lists.module:431;191
 msgid "Refresh"
-msgstr "Verversen"
+msgstr "Herladen"
 
 #: culturefeed_lists.pages.inc:84 draggableviews/CdbItems.inc:54 views/culturefeed_lists.views.inc:20;25 views/handler/sort/draggable.inc:57
 msgid "List"
