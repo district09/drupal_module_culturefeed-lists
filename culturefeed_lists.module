@@ -15,6 +15,7 @@ define('CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM', 'manage culturefeed item list
 // Administration base path.
 define('CULTUREFEED_LISTS_PATH_ADMIN', 'admin/config/culturefeed/lists');
 define('CULTUREFEED_LISTS_PATH_EVENT_MANAGE', 'agenda/e/%/%culturefeed_agenda_event/lists');
+define('CULTUREFEED_LISTS_PATH_EVENT_MANAGE_REFRESH', 'agenda/e/%/%culturefeed_agenda_event/lists/refresh');
 
 // Include libraries.
 require_once __DIR__ . '/includes/list.inc';
@@ -94,6 +95,9 @@ function culturefeed_lists_menu() {
   $admin_manage_reset = culturefeed_lists_admin_path(
     array('%culturefeed_lists_list', 'manage', 'reset')
   );
+  $admin_refresh = culturefeed_lists_admin_path(
+    array('%culturefeed_lists_list', 'refresh')
+  );
   $admin_manage_event_remove = culturefeed_lists_admin_path(
     array(
       '%culturefeed_lists_list',
@@ -154,6 +158,14 @@ function culturefeed_lists_menu() {
     'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
     'file' => $file_admin,
   );
+  $items[$admin_refresh] = array(
+    'title' => 'Refresh list',
+    'description' => 'Refresh the list by getting the items from the backend instead of cache.',
+    'page callback' => 'culturefeed_lists_admin_manage_refresh',
+    'page arguments' => array(3),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_ADMINISTER),
+    'file' => $file_admin,
+  );
   $items[$admin_manage_event_remove] = array(
     'title' => 'Remove item from list',
     'description' => 'Remove an item from a list.',
@@ -172,6 +184,13 @@ function culturefeed_lists_menu() {
     'title' => 'Lists',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('culturefeed_lists_manage_event_lists_form', 3),
+    'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM),
+    'file' => $file_pages,
+  );
+  $items[CULTUREFEED_LISTS_PATH_EVENT_MANAGE_REFRESH] = array(
+    'title' => 'Refresh',
+    'page callback' => 'culturefeed_lists_manage_event_lists_refresh',
+    'page arguments' => array(3),
     'access arguments' => array(CULTUREFEED_LISTS_PERMISSION_MANAGE_ITEM),
     'file' => $file_pages,
   );
@@ -389,15 +408,12 @@ function culturefeed_lists_form_culturefeed_entry_ui_edit_tag_objects_form_alter
  * @see culturefeed_lists_admin_manage_reset_order_submit()
  */
 function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter(array &$form, array &$form_state) {
-  // Add the button only if the page has items.
-  if (empty($form_state['list'])) {
-    return;
-  }
+  form_load_include($form_state, 'inc', 'culturefeed_lists', 'culturefeed_lists.admin');
+  $list = $form_state['list'];
 
   // Only add the reset button if there is a custom sorts set.
   $sort = culturefeed_lists_sort_load($form_state['list']);
   if (!empty($sort)) {
-    form_load_include($form_state, 'inc', 'culturefeed_lists', 'culturefeed_lists.admin');
     $form['actions']['reset_order'] = array(
       '#type' => 'submit',
       '#value' => t('Reset order'),
@@ -405,6 +421,16 @@ function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_
       '#submit' => array('culturefeed_lists_admin_manage_reset_order_submit'),
     );
   }
+
+  // Add the refresh button.
+  $admin_refresh = culturefeed_lists_admin_path(
+    array($list->getId(), 'refresh')
+  );
+  $form['actions']['refresh'] = array(
+    '#type' => 'link',
+    '#title' => t('Refresh'),
+    '#href' => $admin_refresh,
+  );
 
   $form['actions']['submit']['#submit'][] = 'culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter_submit';
 }

@@ -57,6 +57,11 @@ function culturefeed_lists_manage_event_lists_form(array $form, array &$form_sta
       '#type' => 'submit',
       '#value' => t('Save'),
     ),
+    'refresh' => array(
+      '#type' => 'link',
+      '#title' => t('Refresh'),
+      '#href' => current_path() . '/refresh',
+    ),
   );
 
   return $form;
@@ -145,4 +150,25 @@ function culturefeed_lists_manage_event_lists_form_submit(array $form, array &$f
       );
     }
   }
+}
+
+/**
+ * Page callback to refresh the lists overview for the given event.
+ *
+ * This will clear the event detail cache so we reload the list tags from the
+ * backend.
+ *
+ * @param ActivityStatsExtendedEntity $extendedEvent
+ *   The event to show the form for.
+ */
+function culturefeed_lists_manage_event_lists_refresh(ActivityStatsExtendedEntity $extendedEvent) {
+  $event = $extendedEvent->getEntity();
+  cache_clear_all(
+    'culturefeed:results:detail:event:' . $event->getCdbId(),
+    'cache_culturefeed_search'
+  );
+
+  drupal_set_message(t('Lists are refreshed.'));
+  $path = preg_replace('/\/refresh$/', '', current_path());
+  drupal_goto($path);
 }

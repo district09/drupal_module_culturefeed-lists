@@ -4,6 +4,10 @@ All Notable changes to **CultureFeed Lists**.
 
 
 ## [Unreleased]
+### Added
+* #21 : Added "refresh" functionality to reload list data from the backend 
+  instead of serving it from local cache.
+
 ### Fixed
 * #17 : Fixed notices when there are no existing tabs on the event detail page.
 * #19 : Fixed sorting not working with large list of items.
