@@ -409,10 +409,16 @@ function culturefeed_lists_form_culturefeed_entry_ui_edit_tag_objects_form_alter
  */
 function culturefeed_lists_form_views_form_culturefeed_lists_administer_default_alter(array &$form, array &$form_state) {
   form_load_include($form_state, 'inc', 'culturefeed_lists', 'culturefeed_lists.admin');
-  $list = $form_state['list'];
+
+  // List is only passed trough $form_state if there is a sort for it.
+  // We grab the list from the URL.
+  $list = culturefeed_lists_list_load(arg(3));
+  if (!$list) {
+    return;
+  }
 
   // Only add the reset button if there is a custom sorts set.
-  $sort = culturefeed_lists_sort_load($form_state['list']);
+  $sort = culturefeed_lists_sort_load($list);
   if (!empty($sort)) {
     $form['actions']['reset_order'] = array(
       '#type' => 'submit',
